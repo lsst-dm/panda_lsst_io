@@ -1,0 +1,7 @@
+# Editable Sphinx project dependencies
+#
+# After editing, update requirements.txt by running:
+#     make update-deps
+
+documenteer
+lsst-sphinx-bootstrap-theme>=0.2.0,<0.3.0
