@@ -8,7 +8,6 @@ Setup Overview - links to slideshows
 ====================================
 
 .. toctree::
-   :maxdepth:1
    setup-overview/component-overview
    getting-started/logging-in
    getting-started/repositories
