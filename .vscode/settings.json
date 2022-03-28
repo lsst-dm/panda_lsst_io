@@ -1,2 +1,5 @@
 {
+    "restructuredtext.confPath": "${workspaceFolder}",
+    "esbonio.server.enabled": true,
+    "esbonio.sphinx.confDir": "${workspaceFolder}"
 }

@@ -55,11 +55,11 @@ other components. The components overview is presented
 In this document we will describe only several components from the whole
 setup (Fig. 1) facing end users.
 
-#.. image:: media/image10.png
-#   :width: 5.30895in
-#  :height: 4.46667in
+.. image:: images/SystemComponentDiagram.jpg
+   :width: 5.30895in
+  :height: 4.46667in
 
-#Fig 1. System component diagram
+Fig 1. System component diagram
 
 GKE queues
 ----------
