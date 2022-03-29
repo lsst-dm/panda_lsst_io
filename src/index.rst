@@ -56,9 +56,8 @@ In this document we will describe only several components from the whole
 setup (Fig. 1) facing end users.
 
 .. image:: /_images/SystemComponentDiagram.jpg
-      :target:/_images/SystemComponentDiagram.jpg
-   :width: 5.30895in
-  :height: 4.46667in
+ :width: 5.30895in
+ :height: 4.46667in
 
 Fig 1. System component diagram
 
@@ -71,7 +70,6 @@ dedicated for landing jobs with significantly different requirements to
 memory. The node used for the DOMA_LSST_GOOGLE_TEST allocates about 4GB
 of RAM per job and the DOMA_LSST_GOOGLE_TEST_HIMEM allocates about 14GB
 of RAM per job.
-
 The PanDA server performs automatic landing tasks in the appropriate
 queue using the memory requirements information. There are few
 associated configuration parameters should be defined in the YAML:
