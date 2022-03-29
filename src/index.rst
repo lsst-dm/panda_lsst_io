@@ -285,7 +285,7 @@ https://panda-doma.cern.ch/idds/wfprogress/ .
 https://cafiles.cern.ch/cafiles/certificates/list.aspx?ca=grid and
 install CERN Grid certification Authority in the browser)
 
-.. image:: _images/Fig3ScreenshotOfWorkflowProgress.jpg
+.. image:: /_images/Fig3ScreenshotOfWorkflowProgress.jpg
    :width: 6.5in
    :height: 2.66667in
 
@@ -322,9 +322,9 @@ https://panda-doma.cern.ch/tasks/?name=shared_pipecheck_20210525T115157Z*
 This view displays a short summary of tasks, its statuses and progress.
 For example, a line of the summary table shown in the fig 4.
 
-#.. image:: media/image3.png
-#   :width: 6.5in
-#   :height: 0.43056in
+.. image:: /_images/TaskSummaryTaskView.jpg
+   :width: 6.5in
+   :height: 0.43056in
 
 Fig 4. Example of the task summary on the tasks view
 
@@ -348,9 +348,9 @@ Jobs progress
 Clicking on the task id or its name on the tasks view the detailed
 information is loaded, as shown on the fig. 5:
 
-#.. image:: media/image8.png
-#   :width: 5.95313in
-#   :height: 4.4446in
+.. image:: /_images/Fig5TaskDetail.jpg
+   :width: 5.95313in
+   :height: 4.4446in
 
 Fig 5. Task details
 
@@ -416,9 +416,9 @@ Or ask for logs containing the field "**MDC.RUN**":
 
 You will get something like:
 
-#.. image:: media/image2.png
-#   :width: 6.5in
-#   :height: 5.20833in
+.. image:: /_images/Fig6LogExporer.jpg
+   :width: 6.5in
+   :height: 5.20833in
 
 You can change the time period from the top panel. The default is the
 last hour. And you can also pull down the **Configure** menu (on the
@@ -442,9 +442,9 @@ container used on IDF. To open that plots user should click on the
 “Memory and IO plots” button placed on a job view like shown on the fig.
 7 and open the popup link.
 
-#.. image:: media/image1.png
-#   :width: 6.5in
-#   :height: 3.68056in
+.. image:: /_images/Fig7MemoryAndIO.jpg
+   :width: 6.5in
+   :height: 3.68056in
 
 Fig 7. “Memory and IO plots” button
 
