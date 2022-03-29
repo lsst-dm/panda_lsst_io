@@ -55,7 +55,8 @@ other components. The components overview is presented
 In this document we will describe only several components from the whole
 setup (Fig. 1) facing end users.
 
-.. image:: images/SystemComponentDiagram.jpg
+.. image:: /_images/SystemComponentDiagram.jpg
+      :target:/_images/SystemComponentDiagram.jpg
    :width: 5.30895in
   :height: 4.46667in
 
