@@ -237,9 +237,9 @@ A user should proceed with the provided URL, login into the IAM system
 with identity provider used for registration in the
 https://panda-iam-doma.cern.ch and after confirm the payload:
 
-#.. image:: media/image9.png
-#   :width: 6.5in
-#   :height: 4.04167in
+.. image:: /_images/PayloadApproveScreen.jpg
+   :width: 6.5in
+   :height: 4.04167in
 
 Fig 2. Payload approve screen
 
@@ -285,9 +285,9 @@ https://panda-doma.cern.ch/idds/wfprogress/ .
 https://cafiles.cern.ch/cafiles/certificates/list.aspx?ca=grid and
 install CERN Grid certification Authority in the browser)
 
-#.. image:: media/image4.png
-#   :width: 6.5in
-#   :height: 2.66667in
+.. image:: _images/Fig3ScreenshotOfWorkflowProgress.jpg
+   :width: 6.5in
+   :height: 2.66667in
 
 Fig 3. Screenshot of the Workflow progress view
 
