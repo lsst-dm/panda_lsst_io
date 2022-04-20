@@ -50,8 +50,7 @@ A PanDA setup for the Rubin DP0.2 exercise consists of several
 components including a test PanDA server instance located at CERN, two
 Google Kubernetes Engine (GKE) clusters deployed in the Google based
 Interim Data Facility (IDF), submission node in the Google Cloud and
-other components. The components overview is presented
-`here <https://brookhavenlab-my.sharepoint.com/:p:/g/personal/spadolski_bnl_gov/ERnBzu8NO0lHi57ZcS_ESkUBJGl_8qdpKVr4VvG2TICp0A?e=VlXbP2>`__.
+other components.
 In this document we will describe only several components from the whole
 setup (Fig. 1) facing end users.
 
@@ -121,7 +120,7 @@ YAML configuration
 As any other Rubin workflow submitted with BPS commands, PanDA based
 data processing requires a YAML configuration file. The YAML settings,
 common for different BPS plugins provided here:
-https://pipelines.lsst.io/v/w_2021_24/modules/lsst.ctrl.bps/quickstart.html#defining-a-submission
+https://pipelines.lsst.io/modules/lsst.ctrl.bps/quickstart.html#defining-a-submission
 
 Later in this section we focus on PanDA specific and minimal set of the
 common settings supplied in the YAML with
@@ -189,7 +188,7 @@ workflow generation can not be proceeded on the local machines and
 require execution of the bps commands on the dedicated submission
 machine available for remote ssh access as
 
-ssh <username>@35.239.245.173
+ssh <username>@<submission node name removed for security purposes>
 
 Currently this access is limited to a small number of users with
 lsst.cloud accounts.Before attempting to login to this machine one
@@ -355,7 +354,7 @@ information is loaded, as shown on the fig. 5:
 Fig 5. Task details
 
 Here one can see several tables, one of the most important is the jobs
-summary. In this table all jobs of the task are counted and groped by
+summary. In this table all jobs of the task are counted and grouped by
 their statuses. Since PanDA uses late jobs generation, a job is
 generated only when the next available input is released.
 
@@ -500,4 +499,4 @@ be applied to the whole workflow:
 Support channels
 ================
 
-The primary source of support is the Slack channel: #rubinobs-panda.
+The primary source of support is the Slack channel: #rubinobs-panda-support.
