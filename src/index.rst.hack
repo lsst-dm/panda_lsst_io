@@ -1,3 +1,28 @@
+####################
+The PanDA User Guide
+####################
+
+This guide describes basic operations for running Rubin workflow with PanDA on the Google Cloud deployment prepared for the DP0.2 exercise. This setup continuously evolves, this is why the current manual may not always precisely reflect the transitional state. In case of founding any discrepancies please inform the authors using provided Support Channels.
+
+Setup Overview - links to slideshows
+====================================
+
+
+
+Using the LSST Science Pipelines
+================================
+
+resources:
+PanDA: https://panda-wms.readthedocs.io/en/latest/
+iDDS: https://idds.cern.ch/
+Harvester: https://github.com/HSF/harvester/wiki
+Pilot: https://github.com/PanDAWMS/pilot2/wiki
+PanDA monitoring for Rubin: http://panda-doma.cern.ch/
+Rubin users support: https://lsstc.slack.com/archives/C025SQLKV0X
+Rubin PanDA development: https://lsstc.slack.com/archives/C01J0QS3X70
+Rubin PanDA manual
+
+
 This guide describes basic operations for running Rubin workflow with
 PanDA on the Google Cloud deployment prepared for the DP0.2 exercise.
 This setup continuously evolves, this is why the current manual may not
@@ -50,13 +75,14 @@ A PanDA setup for the Rubin DP0.2 exercise consists of several
 components including a test PanDA server instance located at CERN, two
 Google Kubernetes Engine (GKE) clusters deployed in the Google based
 Interim Data Facility (IDF), submission node in the Google Cloud and
-other components.
+other components. The components overview is presented
+`here <https://brookhavenlab-my.sharepoint.com/:p:/g/personal/spadolski_bnl_gov/ERnBzu8NO0lHi57ZcS_ESkUBJGl_8qdpKVr4VvG2TICp0A?e=VlXbP2>`__.
 In this document we will describe only several components from the whole
 setup (Fig. 1) facing end users.
 
-.. image:: /_images/SystemComponentDiagram.jpg
- :width: 5.30895in
- :height: 4.46667in
+.. image:: media/image10.png
+   :width: 5.30895in
+   :height: 4.46667in
 
 Fig 1. System component diagram
 
@@ -69,6 +95,7 @@ dedicated for landing jobs with significantly different requirements to
 memory. The node used for the DOMA_LSST_GOOGLE_TEST allocates about 4GB
 of RAM per job and the DOMA_LSST_GOOGLE_TEST_HIMEM allocates about 14GB
 of RAM per job.
+
 The PanDA server performs automatic landing tasks in the appropriate
 queue using the memory requirements information. There are few
 associated configuration parameters should be defined in the YAML:
@@ -120,7 +147,7 @@ YAML configuration
 As any other Rubin workflow submitted with BPS commands, PanDA based
 data processing requires a YAML configuration file. The YAML settings,
 common for different BPS plugins provided here:
-https://pipelines.lsst.io/modules/lsst.ctrl.bps/quickstart.html#defining-a-submission
+https://pipelines.lsst.io/v/w_2021_24/modules/lsst.ctrl.bps/quickstart.html#defining-a-submission
 
 Later in this section we focus on PanDA specific and minimal set of the
 common settings supplied in the YAML with
@@ -188,7 +215,7 @@ workflow generation can not be proceeded on the local machines and
 require execution of the bps commands on the dedicated submission
 machine available for remote ssh access as
 
-ssh <username>@<submission node name removed for security purposes>
+ssh <username>@35.239.245.173
 
 Currently this access is limited to a small number of users with
 lsst.cloud accounts.Before attempting to login to this machine one
@@ -236,7 +263,7 @@ A user should proceed with the provided URL, login into the IAM system
 with identity provider used for registration in the
 https://panda-iam-doma.cern.ch and after confirm the payload:
 
-.. image:: /_images/PayloadApproveScreen.jpg
+.. image:: media/image9.png
    :width: 6.5in
    :height: 4.04167in
 
@@ -284,7 +311,7 @@ https://panda-doma.cern.ch/idds/wfprogress/ .
 https://cafiles.cern.ch/cafiles/certificates/list.aspx?ca=grid and
 install CERN Grid certification Authority in the browser)
 
-.. image:: /_images/Fig3ScreenshotOfWorkflowProgress.jpg
+.. image:: media/image4.png
    :width: 6.5in
    :height: 2.66667in
 
@@ -321,7 +348,7 @@ https://panda-doma.cern.ch/tasks/?name=shared_pipecheck_20210525T115157Z*
 This view displays a short summary of tasks, its statuses and progress.
 For example, a line of the summary table shown in the fig 4.
 
-.. image:: /_images/TaskSummaryTaskView.jpg
+.. image:: media/image3.png
    :width: 6.5in
    :height: 0.43056in
 
@@ -347,14 +374,14 @@ Jobs progress
 Clicking on the task id or its name on the tasks view the detailed
 information is loaded, as shown on the fig. 5:
 
-.. image:: /_images/Fig5TaskDetail.jpg
+.. image:: media/image8.png
    :width: 5.95313in
    :height: 4.4446in
 
 Fig 5. Task details
 
 Here one can see several tables, one of the most important is the jobs
-summary. In this table all jobs of the task are counted and grouped by
+summary. In this table all jobs of the task are counted and groped by
 their statuses. Since PanDA uses late jobs generation, a job is
 generated only when the next available input is released.
 
@@ -415,7 +442,7 @@ Or ask for logs containing the field "**MDC.RUN**":
 
 You will get something like:
 
-.. image:: /_images/Fig6LogExporer.jpg
+.. image:: media/image2.png
    :width: 6.5in
    :height: 5.20833in
 
@@ -441,7 +468,7 @@ container used on IDF. To open that plots user should click on the
 “Memory and IO plots” button placed on a job view like shown on the fig.
 7 and open the popup link.
 
-.. image:: /_images/Fig7MemoryAndIO.jpg
+.. image:: media/image1.png
    :width: 6.5in
    :height: 3.68056in
 
@@ -499,4 +526,10 @@ be applied to the whole workflow:
 Support channels
 ================
 
-The primary source of support is the Slack channel: #rubinobs-panda-support.
+The primary source of support is the Slack channel: #rubinobs-panda.
+
+
+
+
+.. See https://raw.githubusercontent.com/lsst-dm/nb_lsst_io/main/src/index.rst
+.. for an example of how ot set up a table of contents.
