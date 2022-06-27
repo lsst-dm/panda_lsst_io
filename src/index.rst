@@ -245,6 +245,13 @@ Fig 2. Payload approve screen
 After approval, the PanDA client leaves a token in the user home folder
 and its used for future submissions unless the timeout has expired.
 
+IAM user authentication
+-----------------------
+
+Ping the PanDA system to check whether the service is ok.
+
+bps ping --wms-service-class lsst.ctrl.bps.panda.PanDAService
+
 How to monitor workflow
 =======================
 
@@ -489,12 +496,12 @@ Workflow cancel/retry
 
 To abort the entire workflow the following script could be used:
 
-/opt/lsst/software/kill_workflow.py --workflowid <workflowid>
+bps cancel --wms-service-class lsst.ctrl.bps.panda.PanDAService --id <workflowid>
 
 If there are many tasks in the exhausted state the retry command could
 be applied to the whole workflow:
 
-/opt/lsst/software/retry_workflow.py --workflowid <workflowid>
+bps restart --wms-service-class lsst.ctrl.bps.panda.PanDAService --id <workflowid>
 
 Support channels
 ================
