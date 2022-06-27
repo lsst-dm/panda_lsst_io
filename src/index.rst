@@ -245,8 +245,8 @@ Fig 2. Payload approve screen
 After approval, the PanDA client leaves a token in the user home folder
 and its used for future submissions unless the timeout has expired.
 
-IAM user authentication
------------------------
+Ping PanDA Service
+------------------
 
 Ping the PanDA system to check whether the service is ok.
 
