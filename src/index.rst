@@ -224,13 +224,13 @@ IAM user authentication
 PanDA services support both x509 and OIDC JWT (Json Web Token) based
 authentications. For the Rubin experiment, the OIDC JWT based authentidation
 method is enabled. It uses the IAM service to generate and valid user
-tokens. The `IAM user authentication` step will be triggered when connecting
+tokens. The *IAM user authentication* step will be triggered when connecting
 to a PanDA service without a valid token.
 
-Here are the steps for `IAM user authentication`::
+Here are the steps for *IAM user authentication*::
 
 .. code-block:: text
-    
+
     INFO : Please go to https://panda-iam-doma.cern.ch/device?user_code=OXIIWM
     and sign in. Waiting until authentication is completed
 
@@ -252,7 +252,7 @@ After approval, the PanDA client leaves a token in the user home folder
 and its used for future submissions unless the timeout has expired.
 
 **A valid token is required for all PanDA services. If there is no valid
-token, the `IAM user authentication` step will be triggered.**
+token, the *IAM user authentication* step will be triggered.**
 
 Ping PanDA Service
 ------------------
