@@ -259,7 +259,7 @@ If the BPS_WMS_SERVICE_CLASS is not set, set it through::
 
 Ping the PanDA system to check whether the service is ok::
 
-   $> bps ping --wms-service-class lsst.ctrl.bps.panda.PanDAService
+   $> bps ping
 
 How to monitor workflow
 =======================
