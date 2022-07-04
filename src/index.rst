@@ -71,21 +71,21 @@ of RAM per job and the DOMA_LSST_GOOGLE_TEST_HIMEM allocates about 14GB
 of RAM per job.
 The PanDA server performs automatic landing tasks in the appropriate
 queue using the memory requirements information. There are few
-associated configuration parameters should be defined in the YAML:
+associated configuration parameters should be defined in the YAML::
 
-computing_cloud: LSST
+    computing_cloud: LSST
 
-pipetask:
+    pipetask:
 
-measure:
+    measure:
 
-requestMemory: 8129
+    requestMemory: 8129
 
-mergeMeasurements:
+    mergeMeasurements:
 
-requestMemory: 4096
+    requestMemory: 4096
 
-...
+    ...
 
 The first parameter (computing_cloud) defines the PanDA cloud associated
 with the IDF. The requestMemory setting defines the RAM request per task
@@ -97,9 +97,9 @@ Users authentication
 During the PanDA evaluation procedure we are using the Indigo-IAM
 (https://github.com/indigo-iam/iam ) system to provide users
 authentication. We set up a dedicated instance of this system available
-here:
+here::
 
-https://panda-iam-doma.cern.ch/login
+    https://panda-iam-doma.cern.ch/login
 
 WIth this system a user can create a new PanDA user profile for
 submission tasks to PanDA. The registration process is starting from the
@@ -119,55 +119,53 @@ YAML configuration
 
 As any other Rubin workflow submitted with BPS commands, PanDA based
 data processing requires a YAML configuration file. The YAML settings,
-common for different BPS plugins provided here:
-https://pipelines.lsst.io/modules/lsst.ctrl.bps/quickstart.html#defining-a-submission
+common for different BPS plugins provided here::
+
+    https://pipelines.lsst.io/modules/lsst.ctrl.bps/quickstart.html#defining-a-submission
 
 Later in this section we focus on PanDA specific and minimal set of the
-common settings supplied in the YAML with
+common settings supplied in the YAML with *bps submit <config>.yaml*
+command. They are::
 
-bps submit <config>.yaml
-
-command. They are:
-
--  maxwalltime: 90000 maximum wall time on the execution node allowed to
+   -  maxwalltime: 90000 maximum wall time on the execution node allowed to
       run a single job in seconds
 
--  maxattempt: 1 number of attempts to successfully execute a job. It is
+   -  maxattempt: 1 number of attempts to successfully execute a job. It is
       recommended to set this parameter at least to 5 due to preemptions
       of machines used in the GKE cluster
 
--  whenSaveJobQgraph: "NEVER" this parameter is mandatory because PanDA
+   -  whenSaveJobQgraph: "NEVER" this parameter is mandatory because PanDA
       plugin is currently supports only a single quantum graph file
       distribution model
 
--  idds_server: "https://aipanda015.cern.ch:443/idds" this is the URL of
+   -  idds_server: "https://aipanda015.cern.ch:443/idds" this is the URL of
       the iDDS server used for the workflow orchestration
 
--  sw_image: "spodolsky/centos:7-stack-lsst_distrib-d_2021_08_11"
+   -  sw_image: "spodolsky/centos:7-stack-lsst_distrib-d_2021_08_11"
       defines the Docker image with the SW distribution to use on the
       computation nodes
 
--  fileDistributionEndPoint:
+   -  fileDistributionEndPoint:
       "s3://butler-us-central1-panda-dev/hsc/{payload_folder}/{uniqProcName}/"
       this is bucket name and path to the data used in the workflow
 
--  s3_endpoint_url: "https://storage.googleapis.com" the address of the
+   -  s3_endpoint_url: "https://storage.googleapis.com" the address of the
       object storage server
 
--  payload_folder: payload name of the folder where the quantum graph
+   -  payload_folder: payload name of the folder where the quantum graph
       file will be stored
 
--  runner_command. This is the command will be executed in container by
+   -  runner_command. This is the command will be executed in container by
       the Pilot instance. The ${{IN/L}} expression is the PanDA
       substitution rule to be used during jobs generation.
 
--  createQuantumGraph: '${CTRL_MPEXEC_DIR}/bin/pipetask qgraph -d
+   -  createQuantumGraph: '${CTRL_MPEXEC_DIR}/bin/pipetask qgraph -d
       "{dataQuery}" -b {butlerConfig} -i {inCollection} -p
       {pipelineYaml} -q {qgraphFile} {pipelineOptions}' this command
       does not contain any PanDA specific parameters and executes at the
       submission node on the local installation
 
--  runQuantumCommand: '${CTRL_MPEXEC_DIR}/bin/pipetask --long-log run -b
+   -  runQuantumCommand: '${CTRL_MPEXEC_DIR}/bin/pipetask --long-log run -b
       {butlerConfig} --output-run {outCollection} --qgraph
       {fileDistributionEndPoint}/{qgraphFile} --qgraph-id {qgraphId}
       --qgraph-node-id {qgraphNodeId} --skip-init-writes --extend-run
@@ -186,34 +184,34 @@ Butler repository and data files located in object storage is allowed
 only for machines located inside the IDF network perimeter. Therefore
 workflow generation can not be proceeded on the local machines and
 require execution of the bps commands on the dedicated submission
-machine available for remote ssh access as
+machine available for remote ssh access as::
 
-ssh <username>@<submission node name removed for security purposes>
+    $> ssh <username>@<submission node name removed for security purposes>
 
 Currently this access is limited to a small number of users with
 lsst.cloud accounts.Before attempting to login to this machine one
 should receive proper access permission writing in the Rubin slack
 channel #rubinobs-panda.
 
-The current stack of the Rubin SW is installed there under this tree:
+The current stack of the Rubin SW is installed there under this tree::
 
-/opt/lsst/software/stack/stack_d_2021_08_11
+    $> ls /opt/lsst/software/stack/stack_d_2021_08_11
 
-To initialize all needed environment variables one should call:
+To initialize all needed environment variables one should call::
 
-source /opt/lsst/software/stack/stack_d_2021_08_11/loadLSST.bash
+    $> source /opt/lsst/software/stack/stack_d_2021_08_11/loadLSST.bash
 
-setup lsst_distrib
+    $> setup lsst_distrib
 
-source /opt/lsst/software/panda_env.sh
+    $> source /opt/lsst/software/panda_env.sh
 
 The last line activates PanDA specific variables such as server
 addresses and authentication pipeline.
 
 Once the environment is activated the workflow could be submitted into
-the system:
+the system::
 
-bps submit <configuration.yaml>
+    $> bps submit <configuration.yaml>
 
 In the case of successful workflow generation, users will get a link to
 authenticate in the system as described in the next section.
@@ -228,8 +226,6 @@ tokens. The *IAM user authentication* step will be triggered when connecting
 to a PanDA service without a valid token.
 
 Here are the steps for *IAM user authentication*::
-
-.. code-block:: text
 
     INFO : Please go to https://panda-iam-doma.cern.ch/device?user_code=OXIIWM
     and sign in. Waiting until authentication is completed
@@ -284,9 +280,9 @@ used. One pseudo-file name encodes the quantum graph file and the data
 node id to be processed by a particular job.
 
 The primary monitoring tool used with the test PanDA setup is available
-on this address:
+on this address::
 
-https://panda-doma.cern.ch/
+    https://panda-doma.cern.ch/
 
 First-time access may require adding this site to the secure exception
 list, this happens because the site SSL certificate has been signed by
@@ -297,8 +293,9 @@ easiest way to do this.
 Workflow progress
 -----------------
 
-The workflow summary is available on this address:
-https://panda-doma.cern.ch/idds/wfprogress/ .
+The workflow summary is available on this address::
+
+    https://panda-doma.cern.ch/idds/wfprogress/ .
 
 (Follow instructions on
 https://cafiles.cern.ch/cafiles/certificates/list.aspx?ca=grid and
@@ -310,19 +307,19 @@ install CERN Grid certification Authority in the browser)
 
 Fig 3. Screenshot of the Workflow progress view
 
-This page provides an overview of the workflow progress:
+This page provides an overview of the workflow progress::
 
--  requst_id is the number of the workflow in the iDDS server
+   -  requst_id is the number of the workflow in the iDDS server
 
--  created_at is the time when the workflow was submitted in the iDDS
+   -  created_at is the time when the workflow was submitted in the iDDS
       server. Time provided in the UTC time zone.
 
--  total_tasks is the number of tasks used for grouping jobs of the same
+   -  total_tasks is the number of tasks used for grouping jobs of the same
       functional role
 
--  tasks column provides link to tasks in different status
+   -  tasks column provides link to tasks in different status
 
--  all rest columns provides count of input files in different statuses
+   -  all rest columns provides count of input files in different statuses
 
 Once a new workflow has submitted it can take about 20 minutes to appear
 in the workflow monitoring
@@ -334,9 +331,9 @@ Tasks view provides more detailed information about statuses of tasks in
 the workflow. There are different ways how such a list of tasks could be
 retrieved. One of the ways is to drill down using the link provided in
 the WorkFlow progress view described earlier. Another way is to use the
-workflow name, e.g.:
+workflow name, e.g.::
 
-https://panda-doma.cern.ch/tasks/?name=shared_pipecheck_20210525T115157Z*
+    https://panda-doma.cern.ch/tasks/?name=shared_pipecheck_20210525T115157Z*
 
 This view displays a short summary of tasks, its statuses and progress.
 For example, a line of the summary table shown in the fig 4.
@@ -384,9 +381,9 @@ The drop mode hides all failed jobs which were successfully retried and
 shows only failures which are hopeless or not yet addressed by the retry
 module. The drop mode is the default one. The non drop mode shows every
 failure regardless if they were retried. It could be directly specified
-in the query URL as follows:
+in the query URL as follows::
 
-https://panda-doma.cern.ch/task/<taskid>/?mode=nodrop
+    https://panda-doma.cern.ch/task/<taskid>/?mode=nodrop
 
 Logs access
 -----------
@@ -399,13 +396,13 @@ kinds of job logs available: the Rubin software output and the Pilot log
 which arrange the job run on the computation node.
 
 To access the job log one should load the job details page first. It is
-accessible as:
+accessible as::
 
-https://panda-doma.cern.ch/job/<jobid>/
+    https://panda-doma.cern.ch/job/<jobid>/
 
-The job page could be also navigated starting from the task page:
+The job page could be also navigated starting from the task page::
 
-task - > list of jobs in particular state -> job
+    task - > list of jobs in particular state -> job
 
 Once a job page has landed a user should click: Logs -> Pilot job
 stderr. This will download the Rubin SW output.
@@ -477,32 +474,19 @@ Workflow points of inspection
 -----------------------------
 
 Different metrics could be inspected to check workflow progress and
-identify possible issues. There are few of them:
+identify possible issues. There are few of them::
 
--  Is the workflow properly submitted? This could be checked looking
+  -  Is the workflow properly submitted? This could be checked looking
       into the https://panda-doma.cern.ch/idds/wfprogress/ table. If the
       workflow with id provided during submission is in the table, then
       it went into the iDDS/PanDA systems.
 
--  Are there any failures not related to node preemption? To check this
+  -  Are there any failures not related to node preemption? To check this
       user should list failed jobs and check type of occurred errors:
 
-..
+  ..
 
-   https://panda-doma.cern.ch/jobs/?jeditaskid=\ <task>&jobstatus=failed
-
-Tasks retry
------------
-
-If a particular task is exhausted in attempts to complete all its jobs,
-it could be retried. Retrial operation will reinforce to run all
-uncompleted payload.
-
-The development of PanDA plugin to provide tight integration between BPS
-and the workflow management system is still in progress, for the DP0.2
-period we provide a script which can issue the task retry command:
-
-/opt/lsst/software/retry_task.py --taskid <taskid>
+  https://panda-doma.cern.ch/jobs/?jeditaskid=\ <task>&jobstatus=failed
 
 Workflow cancel/retry
 ---------------------
