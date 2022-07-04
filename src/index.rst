@@ -511,14 +511,26 @@ If the BPS_WMS_SERVICE_CLASS is not set, set it through::
 
    $> export BPS_WMS_SERVICE_CLASS=lsst.ctrl.bps.panda.PanDAService
 
-To abort the entire workflow the following script could be used::
+To abort the entire workflow the following command could be used::
 
    $> bps cancel --id <workflowid>
 
-If there are many tasks in the exhausted state the retry command could
-be applied to the whole workflow::
+**(Currently bps cancel will only kill non-running jobs.)**
+**(Be careful, currently bps cancel can kill other users' jobs)**
+**(iDDS will fix these two parts as soon as possible)**
+
+If there are many failed jobs or tasks in a workflow, the restart command could
+be applied to the whole workflow to reactivate the failed jobs and tasks::
 
    $> bps restart  --id <workflowid>
+
+**(When `bps restart` is called to PanDA service, the activities that PanDA does is
+to retry the workflow. When retrying a workflow, all finished tasks and jobs will
+not be touched. If the workflow is still running, retrying will re-activate the
+failed tasks and jobs to rerun them (The queuing or running jobs will not be affected).
+If the workflow is terminated, retrying will re-activate all unfinished tasks and
+jobs. From the monitoring view, all monitor pages will be the same. The only difference
+should be that the number of retries is increased.)**
 
 Support channels
 ================
