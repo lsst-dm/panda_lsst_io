@@ -229,7 +229,7 @@ to a PanDA service without a valid token.
 
 Here are the steps for `IAM user authentication`::
 
-.. code-block:: python
+.. code-block:: text
     
     INFO : Please go to https://panda-iam-doma.cern.ch/device?user_code=OXIIWM
     and sign in. Waiting until authentication is completed
