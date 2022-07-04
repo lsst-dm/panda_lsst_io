@@ -500,7 +500,9 @@ To abort the entire workflow the following command could be used::
    $> bps cancel --id <workflowid>
 
 **(Currently bps cancel will only kill non-running jobs.)**
+
 **(Be careful, currently bps cancel can kill other users' jobs)**
+
 **(iDDS will fix these two parts as soon as possible)**
 
 If there are many failed jobs or tasks in a workflow, the restart command could
