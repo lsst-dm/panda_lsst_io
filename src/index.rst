@@ -221,16 +221,22 @@ authenticate in the system as described in the next section.
 IAM user authentication
 -----------------------
 
-After workflow generation the Rubin middleware BPS system will provide
-the following authentication prompt:
+PanDA services support both x509 and OIDC JWT (Json Web Token) based
+authentications. For the Rubin experiment, the OIDC JWT based authentidation
+method is enabled. It uses the IAM service to generate and valid user
+tokens. The `IAM user authentication` step will be triggered when connecting
+to a PanDA service without a valid token.
 
-INFO : Please go to
-https://panda-iam-doma.cern.ch/device?user_code=OXIIWM and sign in.
-Waiting until authentication is completed
+Here are the steps for `IAM user authentication`::
 
-INFO : Ready to get ID token?
+.. code-block:: python
+    
+    INFO : Please go to https://panda-iam-doma.cern.ch/device?user_code=OXIIWM
+    and sign in. Waiting until authentication is completed
 
-[y/n]
+    INFO : Ready to get ID token?
+
+    [y/n]
 
 A user should proceed with the provided URL, login into the IAM system
 with identity provider used for registration in the
@@ -245,12 +251,19 @@ Fig 2. Payload approve screen
 After approval, the PanDA client leaves a token in the user home folder
 and its used for future submissions unless the timeout has expired.
 
+**A valid token is required for all PanDA services. If there is no valid
+token, the `IAM user authentication` step will be triggered.**
+
 Ping PanDA Service
 ------------------
 
-Ping the PanDA system to check whether the service is ok.
+If the BPS_WMS_SERVICE_CLASS is not set, set it through::
 
-bps ping --wms-service-class lsst.ctrl.bps.panda.PanDAService
+   $> export BPS_WMS_SERVICE_CLASS=lsst.ctrl.bps.panda.PanDAService
+
+Ping the PanDA system to check whether the service is ok::
+
+   $> bps ping --wms-service-class lsst.ctrl.bps.panda.PanDAService
 
 How to monitor workflow
 =======================
@@ -494,14 +507,18 @@ period we provide a script which can issue the task retry command:
 Workflow cancel/retry
 ---------------------
 
-To abort the entire workflow the following script could be used:
+If the BPS_WMS_SERVICE_CLASS is not set, set it through::
 
-bps cancel --wms-service-class lsst.ctrl.bps.panda.PanDAService --id <workflowid>
+   $> export BPS_WMS_SERVICE_CLASS=lsst.ctrl.bps.panda.PanDAService
+
+To abort the entire workflow the following script could be used::
+
+   $> bps cancel --id <workflowid>
 
 If there are many tasks in the exhausted state the retry command could
-be applied to the whole workflow:
+be applied to the whole workflow::
 
-bps restart --wms-service-class lsst.ctrl.bps.panda.PanDAService --id <workflowid>
+   $> bps restart  --id <workflowid>
 
 Support channels
 ================
