@@ -186,7 +186,7 @@ How to submit jobs to USDF
 --------------------------
 
 1. Only request memory and let PanDA do the scheduling(do not define *queue*). Here
-is an example(*Just an example, the memory requested is not reasonable here*)::
+is an example::
 
        computeCloud: "US"
        computeSite: "SLAC"
@@ -199,7 +199,7 @@ is an example(*Just an example, the memory requested is not reasonable here*)::
        executionButler:
            requestMemory: 4000
 
-2. Another example by specifying queues::
+2. Another example by specifying queues (Here a *queue* is defined)::
 
        computeCloud: "US"
        computeSite: "SLAC"
