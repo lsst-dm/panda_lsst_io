@@ -180,7 +180,7 @@ the future.
      - 0GB
      - 4GB
      - pull
-     - on(will be off)
+     - on
 
 How to submit jobs to USDF
 --------------------------
