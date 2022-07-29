@@ -136,7 +136,7 @@ users specify the queue name.
 the future.
 
 .. list-table:: USDF (SLAC) PanDA Queues
-      :widths: 25 25 50
+   :widths: 50 25 25 25 25 25
    :header-rows: 1
 
    * - PanDA Queue
