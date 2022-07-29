@@ -194,11 +194,10 @@ is an example(*Just an example, the memory requested is not reasonable here*)::
 
        pipetask:
            pipetaskInit:
-               requestMemory: 25000
+               requestMemory: 4000
 
        executionButler:
-           requestMemory: 25000
-
+           requestMemory: 4000
 
 2. Another example by specifying queues::
 
@@ -208,12 +207,13 @@ is an example(*Just an example, the memory requested is not reasonable here*)::
 
        pipetask:
            pipetaskInit:
-               requestMemory: 25000
+               requestMemory: 4000
 
        executionButler:
-           # *requestMemory is still required here. Otherwise it can be schedule to the merge*
+           # *requestMemory is still required here.*
+           # *Otherwise it can be schedule to the merge*
            # *queue, but the requestMemory is still 2048*
-           requestMemory: 25000
+           requestMemory: 4000
            queue: "SLAC_Rubin_Merge"
 
 
