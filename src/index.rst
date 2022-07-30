@@ -198,7 +198,6 @@ the future.
 How to submit jobs to USDF
 --------------------------
 
-Here are some BPS configuration examples hwo to submit jobs to USDF::
 
   * Only request memory and let PanDA do the scheduling(do not define *queue*).
     Here is an example::
