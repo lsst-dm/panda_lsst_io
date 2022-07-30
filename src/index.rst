@@ -103,48 +103,48 @@ In the table, the minRSS and maxRSS means the range of required memory.
 For example, for a job requested 5GB memory, PanDA will schedule the job
 to *SLAC_Rubin_medium*.
 
-The Harvester mode means how PanDA runs user jobs. It has *pull* and *push* mode::
+The Harvester mode means how PanDA runs user jobs. It has ``pull`` and ``push`` mode::
 
-  * For *pull* mode, PanDA will submit empty pilots to the cluster maybe even
+  * For ``pull`` mode, PanDA will submit empty pilots to the cluster maybe even
     before the user jobs are submitted. When the pilot starts to run, pilot
     will pull the user jobs to run.
 
-  * In *pull* mode, pilot will be submitted with the *maxRSS* as the
+  * In ``pull`` mode, pilot will be submitted with the ``maxRSS`` as the
     requested memory. So for the job requested 5GB, it will be scheduled
-    to *SLAC_Rubin_medium*. In *SLAC_Rubin_medium* queue, the pilot will
-    be submitted with *maxRSS* 8GB. So this job can no more than 8GB memory.
+    to ``SLAC_Rubin_medium``. In ``SLAC_Rubin_medium`` queue, the pilot will
+    be submitted with ``maxRSS`` 8GB. So this job can no more than 8GB memory.
 
-  * For *pull* mode, one pilot can run multiple jobs. So all jobs requested
+  * For ``pull`` mode, one pilot can run multiple jobs. So all jobs requested
     5GB, 6GB or 7GB are possible to go to the same pilot. It's an efficient
-    way for short jobs. For short jobs, *pull* mode saves a lot of environment
+    way for short jobs. For short jobs, ``pull`` mode saves a lot of environment
     setup time.
 
-  * For *pull* mode, when there are no user jobs. PanDA may still submit a few pilots
+  * For ``pull`` mode, when there are no user jobs. PanDA may still submit a few pilots
     to keep the system ready for user jobs(1~3 pilots normally. It depends on the
     configuration. If you want the system to have a lot of pilots ready at any time,
     the configured number can be high). When there are user jobs, PanDA starts to boost
     to submit more pilots.
 
-  * For *push* mode, pilot is submitted together with a user job (not before the user job).
-    So for *push* mode, one pilot is bound with one user job. In the mode, one pilot
+  * For ``push`` mode, pilot is submitted together with a user job (not before the user job).
+    So for ``push`` mode, one pilot is bound with one user job. In the mode, one pilot
     can run only one job. Since the pilot is submitted after
     the user job is created, pilot will be submitted with exact requestMemory of the job.
     For example, if a job requests 20GB memory. The job will be scheduled to
-    *SLAC_Rubin_Extra_Himem*. If this queue was *pull* mode, the pilot would be submitted
-    with 220GB (the maxRSS). However, since this queue is *push* mode, the pilot will be
+    ``SLAC_Rubin_Extra_Himem``. If this queue was ``pull`` mode, the pilot would be submitted
+    with 220GB (the maxRSS). However, since this queue is ``push`` mode, the pilot will be
     submitted with the requestMemory 20GB.
 
   * The whole idea is that we think there will be a lot of jobs with not much memory. So
-    we use *pull* mode to make it efficient. We think the number of jobs which request
+    we use ``pull`` mode to make it efficient. We think the number of jobs which request
     extra high memory is not big. But for these jobs, the range of requestMemory can be big,
-    so we use *push* mode to efficiently use the memory.
+    so we use ``push`` mode to efficiently use the memory.
 
 There is another special queue *SLAC_Rubin_Merge*, its memory range is from 0GB to
 500GB (The maximum memory one machine at SLAC can provide). However, this queue is
 brokeroff. It means PanDA will not schedule andy jobs to it. It can only accept jobs when
 users specify the queue name.
 
-SLAC_TEST* currently is still on production. It will be moved for development only in
+*SLAC_TEST* currently is still on production. It will be moved for development only in
 the future.
 
 
@@ -198,8 +198,10 @@ the future.
 How to submit jobs to USDF
 --------------------------
 
-#. Only request memory and let PanDA do the scheduling(do not define *queue*).
-Here is an example::
+Here are some BPS configuration examples hwo to submit jobs to USDF::
+
+  * Only request memory and let PanDA do the scheduling(do not define *queue*).
+    Here is an example::
 
        computeCloud: "US"
        computeSite: "SLAC"
@@ -212,7 +214,7 @@ Here is an example::
        executionButler:
            requestMemory: 4000
 
-#. Another example by specifying queues (Here a *queue* is defined)::
+  * Another example by specifying queues (Here a *queue* is defined)::
 
        computeCloud: "US"
        computeSite: "SLAC"
