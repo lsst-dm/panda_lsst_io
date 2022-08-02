@@ -100,23 +100,33 @@ are logical queues defined in the CE. Jobs will be submitted to slurm
 partition “rubin”).
 
 In the table, the minRSS and maxRSS means the range of required memory.
-For example, for a job requested 5GB memory, PanDA will schedule the job
-to *SLAC_Rubin_medium*.
+``RSS(resident set size)`` is the portion of memory occupied by a process
+that is held in main memory (RAM). BPS ``requestMemory`` will be mapped to
+``RSS`` requirements in PanDA.
+For example, for a Rubin job with "requestMemory: 5000" (5000MB), PanDA will
+schedule the job to *SLAC_Rubin_medium* which has minRSS 4GB and maxRSS 8GB.
 
-The Harvester mode means how PanDA runs user jobs. It has ``pull`` and ``push`` mode::
+The PanDA system uses pilot to manage user jobs. A pilot is a wrapper or an agent
+which manages to setup pre-environment, monitor the user jobs, upload logs to
+global storages and manages other site specific settings. The PanDA system uses
+Harvester to manage the pilots. It can work with ``pull`` and ``push`` mode.
 
-  * For ``pull`` mode, PanDA will submit empty pilots to the cluster maybe even
+The ``pull`` mode::
+
+  * For pull mode, PanDA will submit empty pilots to the cluster maybe even
     before the user jobs are submitted. When the pilot starts to run, pilot
     will pull the user jobs to run.
 
-  * In ``pull`` mode, pilot will be submitted with the ``maxRSS`` as the
-    requested memory. So for the job requested 5GB, it will be scheduled
-    to ``SLAC_Rubin_medium``. In ``SLAC_Rubin_medium`` queue, the pilot will
-    be submitted with ``maxRSS`` 8GB. So this job can no more than 8GB memory.
+  * In pull mode, pilot will be submitted with the maxRSS of the PanDA queue.
+    So for a user job with "requestMemory: 5000", it will be scheduled
+    to SLAC_Rubin_medium. For SLAC_Rubin_medium queue, the pilot will
+    be submitted with 8GB. So this user job can use in fact no more than
+    8GB memory (Even the requestMemory is 5GB, in this case it can use no more than
+    8GB before it's killed).
 
-  * For ``pull`` mode, one pilot can run multiple jobs. So all jobs requested
+  * For pull mode, one pilot can run multiple user jobs. So all user jobs requested
     5GB, 6GB or 7GB are possible to go to the same pilot. It's an efficient
-    way for short jobs. For short jobs, ``pull`` mode saves a lot of environment
+    way for short jobs. For short jobs, pull mode saves a lot of environment
     setup time.
 
   * For ``pull`` mode, when there are no user jobs. PanDA may still submit a few pilots
@@ -125,27 +135,30 @@ The Harvester mode means how PanDA runs user jobs. It has ``pull`` and ``push`` 
     the configured number can be high). When there are user jobs, PanDA starts to boost
     to submit more pilots.
 
-  * For ``push`` mode, pilot is submitted together with a user job (not before the user job).
-    So for ``push`` mode, one pilot is bound with one user job. In the mode, one pilot
-    can run only one job. Since the pilot is submitted after
-    the user job is created, pilot will be submitted with exact requestMemory of the job.
-    For example, if a job requests 20GB memory. The job will be scheduled to
-    ``SLAC_Rubin_Extra_Himem``. If this queue was ``pull`` mode, the pilot would be submitted
-    with 220GB (the maxRSS). However, since this queue is ``push`` mode, the pilot will be
+The ``push`` mode::
+
+  * For push mode, pilot is submitted together with a user job (not before the user job).
+    So for push mode, one pilot is bound with one user job. In this mode, one pilot
+    will only run that one job before it exits and the slurm job completes.
+
+  * Since the pilot is submitted after the user job is created, pilot will be submitted
+    with the exact requestMemory of the job.
+    For example, if a user job requests 20GB memory. The job will be scheduled to
+    SLAC_Rubin_Extra_Himem. If this queue was pull mode, the pilot would be submitted
+    with 220GB (the maxRSS). However, since this queue is push mode, the pilot will be
     submitted with the requestMemory 20GB.
 
-  * The whole idea is that we think there will be a lot of jobs with not much memory. So
-    we use ``pull`` mode to make it efficient. We think the number of jobs which request
-    extra high memory is not big. But for these jobs, the range of requestMemory can be big,
-    so we use ``push`` mode to efficiently use the memory.
+The concept behind the definitions of the PanDA queues at SLAC is for efficient use of the
+slurm cluster, to balance time efficiency for quick jobs with memory efficiency for large memory job.
 
-There is another special queue *SLAC_Rubin_Merge*, its memory range is from 0GB to
-500GB (The maximum memory one machine at SLAC can provide). However, this queue is
-brokeroff. It means PanDA will not schedule andy jobs to it. It can only accept jobs when
-users specify the queue name.
+There is another special queue ``SLAC_Rubin_Merge``, its memory range is from 0GB to
+500GB (The maximum memory one machine at SLAC can provide). Because of its special
+requirements, this is the only queue that currently must be specified by name. Internally,
+it is defined as "brokeroff" which means PanDA does not use the job requirements to match
+to a queue. Instead this queue only accepts jobs that have requested the queue by name.
 
-*SLAC_TEST* currently is still on production. It will be moved for development only in
-the future.
+``SLAC_TEST`` is a PanDA/IDDS developer queue in which there are no guarantees about stability
+and uptimes and as such should not be used for regular runs
 
 
 .. list-table:: USDF (SLAC) PanDA Queues
@@ -195,6 +208,7 @@ the future.
      - pull
      - on
 
+
 How to submit jobs to USDF
 --------------------------
 
@@ -223,12 +237,12 @@ How to submit jobs to USDF
            pipetaskInit:
                requestMemory: 4000
 
-       executionButler:
-           # *requestMemory is still required here.*
-           # *Otherwise it can be schedule to the merge*
-           # *queue, but the requestMemory is still 2048*
-           requestMemory: 4000
-           queue: "SLAC_Rubin_Merge"
+           forcedPhotCoadd:
+               # *requestMemory is still required here.*
+               # *Otherwise it can be schedule to the merge*
+               # *queue, but the requestMemory is still 2048*
+               requestMemory: 4000
+               queue: "SLAC_Rubin_Merge"
 
 
 Users authentication
