@@ -669,11 +669,15 @@ Submit a development workflow to USDF S3DF
 ------------------------------------------
 
 To submit a development workflow to S3DF, please at first check `Submit a workflow to USDF S3DF`_.
+Here we only list the differences.
 
-Copy the environment setup script from cvmfs and update the lsst setup part to your private repo: ::
+Copy the environment setup script from cvmfs to your local directory and update the lsst
+setup part to your private repo: ::
 
    $> latest=$(ls -td /cvmfs/sw.lsst.eu/linux-x86_64/panda_env/v* | head -1)
    $> cp $latest/setup_panda_s3df.sh .
+   $> <update setup_panda_s3df.sh>
+   $> source ./setup_panda_s3df.sh
 
 ``Note``: Make sure PanDA can read your private repo: ::
 
@@ -771,6 +775,7 @@ To submit jobs to sdf, you need to define the queue to ``SLAC_Rubin_SDF`` or ``S
 in the bps submission yaml file (for SLAC queues, see `USDF (SLAC) queues`_).::
 
    queue: SLAC_Rubin_SDF
+   # queue: SLAC_Rubin_SDF_Big
 
 The other parts to submit jobs to sdf are the same as to submit jobs to S3DF.
 
