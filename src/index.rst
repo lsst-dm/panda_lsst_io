@@ -22,7 +22,11 @@ discrepancies please inform the authors using provided Support Channels.
 
    `Submit a workflow to IDF <#submit-a-workflow-to-idf>`__
 
-   `Submit a workflow to USDF <#submit-a-workflow-to-usdf>`__
+   `Submit a workflow to USDF S3DF <#submit-a-workflow-to-usdf-s3df>`__
+
+   `Submit a development workflow to USDF S3DF <#submit-a-development-workflow-to-usdf-s3df>`__
+
+   `Submit a workflow to USDF SDF <#submit-a-workflow-to-usdf-sdf>`__
 
 `How to monitor workflow <#how-to-monitor-workflow>`__
 
@@ -168,7 +172,7 @@ to a queue. Instead this queue only accepts jobs that have requested the queue b
 and uptimes and as such should not be used for regular runs
 
 
-.. list-table:: USDF (SLAC) PanDA Queues
+.. list-table:: USDF S3DF (SLAC) PanDA Queues
    :widths: 50 25 25 25 25 25
    :header-rows: 1
 
@@ -213,8 +217,33 @@ and uptimes and as such should not be used for regular runs
      - 0GB
      - 4GB
      - pull
-     - on
+     - off
 
+Here are queues for the ``SDF`` cluster. These queues are brokeroff. Users need to
+specify them in order to submit jobs to them.
+
+.. list-table:: USDF SDF (SLAC) PanDA Queues
+      :widths: 50 25 25 25 25 25
+   :header-rows: 1
+
+   * - PanDA Queue
+     - slurm queue
+     - minRSS
+     - maxRSS
+     - Harvester mode
+     - Brokerage
+   * - SLAC_Rubin_SDF
+     - rubin
+     - 0GB
+     - 4GB
+     - pull
+     - off
+   * - SLAC_Rubin_SDF_Big
+     - rubin
+     - 0GB
+     - 220GB
+     - push
+     - off
 
 How to submit jobs to USDF
 --------------------------
@@ -544,11 +573,69 @@ and the Rubin software with: ::
 
 Change *LSST_VERSION* in the example yaml to what you choose: ::
 
+The environment setup script can be found on cvmfs: ::
+
+   $> latest=$(ls -td /cvmfs/sw.lsst.eu/linux-x86_64/panda_env/v* | head -1)
+   $> source $latest/setup_panda_s3df.sh w_2022_35
+
+setup_panda_s3df.sh sets up the PanDA and Rubin environment. Change *w_2022_35* to the
+version you will use. ::
+
+   $> cat $latest/setup_panda_s3df.sh
+   #!/bin/bash
+   if [ "$#" -ne 1 ]; then
+       echo "lsst_distrib version is required."
+       echo "example: source setup_panda.sh w_2022_35"
+   else
+       # setup proxy
+       echo "Setup http proxy"
+       export HTTP_PROXY=http://atlsquid.slac.stanford.edu:3128
+       export https_proxy=http://atlsquid.slac.stanford.edu:3128
+       export http_proxy=http://atlsquid.slac.stanford.edu:3128
+       export HTTPS_PROXY=http://atlsquid.slac.stanford.edu:3128
+       export SQUID_PROXY=http://atlsquid.slac.stanford.edu:3128
+
+       # setup Rubin env
+       # export LSST_VERSION=w_2022_35
+       export LSST_VERSION=$1
+       echo "setup lsst_distrib to ${LSST_VERSION}"
+       source /cvmfs/sw.lsst.eu/linux-x86_64/lsst_distrib/${LSST_VERSION}/loadLSST.bash
+       setup lsst_distrib
+
+       echo "Setup BPS PanDA environment"
+       # setup PanDA env. Will be a simple step when the deployment of PanDA is fully done.
+       export PANDA_CONFIG_ROOT=$HOME/.panda
+       export PANDA_URL_SSL=https://pandaserver-doma.cern.ch:25443/server/panda
+       export PANDA_URL=http://pandaserver-doma.cern.ch:25080/server/panda
+       export PANDACACHE_URL=$PANDA_URL_SSL
+       export PANDAMON_URL=https://panda-doma.cern.ch
+       export PANDA_AUTH=oidc
+       export PANDA_VERIFY_HOST=off
+       export PANDA_AUTH_VO=Rubin
+
+       # IDDS_CONFIG path depends on the weekly version
+       export PANDA_SYS=$CONDA_PREFIX
+       export IDDS_CONFIG=${PANDA_SYS}/etc/idds/idds.cfg.client.template
+
+       # WMS plugin
+       export BPS_WMS_SERVICE_CLASS=lsst.ctrl.bps.panda.PanDAService
+   fi
+
+Download an example bps yaml from the ctrl_bps_panda repository: ::
+
+   $> wget https://raw.githubusercontent.com/lsst/ctrl_bps_panda/main/python/lsst/ctrl/bps/panda/conf_example/test_usdf.yaml
+
+If you have already set up the enviroment for a release of the Rubin software distribution,
+you can also copy these two files from $CTRL_BPS_PANDA_DIR: ::
+
+   $> cp $CTRL_BPS_PANDA_DIR/python/lsst/ctrl/bps/panda/conf_example/test_usdf.yaml .
+
+To run jobs at S3DF, we need to change the ``fileDistributionEndPoint`` the one below for S3DF: ::
    $> cat test_usdf.yaml
    # An example bps submission yaml
    # Need to setup USDF before submitting the yaml
 
-   LSST_VERSION: w_2022_32
+   LSST_VERSION: w_2022_35
 
    includeConfigs:
    - ${CTRL_BPS_PANDA_DIR}/config/bps_usdf.yaml
@@ -559,6 +646,160 @@ Change *LSST_VERSION* in the example yaml to what you choose: ::
      payloadName: testUSDF
      inCollection: "HSC/RC2/defaults"
      dataQuery: "exposure = 34342 AND detector = 10"
+
+     butlerConfig: /sdf/group/rubin/repo/main
+     fileDistributionEndPoint: "file:///sdf/group/rubin/panda_jobs/{operator}/panda_cache_box/{payloadFolder}/{uniqProcName}/"
+
+For different ``butlerConfig`` directory, you also need to grant group permission for PanDA to access the butler::
+
+   $> chmod g+rws /sdf/group/rubin/repo/main/u/<your_operator_name>
+
+You are ready to submit the workflow now: ::
+
+   $> bps submit test_usdf.yaml
+
+Write down the "Run Id" on the submission screen. It is the request ID
+to use on the PanDA monitor.
+
+Submit a development workflow to USDF S3DF
+------------------------------------------
+To submit a development workflow to S3DF, please at first check `Submit a workflow to USDF S3DF`_.
+
+Copy the environment setup script from cvmfs and update the lsst setup part to your private repo: ::
+
+   $> latest=$(ls -td /cvmfs/sw.lsst.eu/linux-x86_64/panda_env/v* | head -1)
+   $> cp $latest/setup_panda_s3df.sh .
+
+``Note``: Make sure PanDA can read your private repo: ::
+
+   $> chmod g+rs <your private development repo>
+
+For the submission yaml file ``test_usdf.yaml``, you need to change the ``runnercommand`` to point
+to your private development repo: ::
+
+   $> cat test_usdf.yaml
+   # An example bps submission yaml
+   # Need to setup USDF before submitting the yaml
+   # source setupUSDF.sh
+
+   LSST_VERSION: w_2022_35
+
+   includeConfigs:
+   - ${CTRL_BPS_PANDA_DIR}/config/bps_usdf.yaml
+
+   pipelineYaml: "${DRP_PIPE_DIR}/pipelines/HSC/DRP-RC2.yaml#isr"
+
+   payload:
+     payloadName: testUSDF
+     inCollection: "HSC/RC2/defaults"
+     dataQuery: "exposure = 34342 AND detector = 10"
+
+     butlerConfig: /sdf/group/rubin/repo/main
+     fileDistributionEndPoint: "file:///sdf/group/rubin/panda_jobs/{operator}/panda_cache_box/{payloadFolder}/{uniqProcName}/"
+
+   # To override the 'loadLSST.bash' and 'setup lsst_distrib' with your development repo.
+   runnerCommand: >
+      unset PYTHONPATH;
+      source /cvmfs/sw.lsst.eu/linux-x86_64/lsst_distrib/{LSST_VERSION}/loadLSST.bash;
+      pwd; ls -al;
+      setup lsst_distrib;
+      prmon -i 5 -f ${PWD}/prmon.txt -j ${PWD}/prmon.json --
+      python3 ${CTRL_BPS_PANDA_DIR}/python/lsst/ctrl/bps/panda/edgenode/cmd_line_decoder.py _cmd_line_;
+      retStat=$?;
+      rm -fr EXEC_REPO-*;
+      ln -fs ${PWD}/prmon.txt ./memory_monitor_output.txt;
+      ln -fs ${PWD}/prmon.json ./memory_monitor_summary.json;
+      exit $retStat
+
+Submit a workflow to USDF SDF
+------------------------------
+Make sure you have db-auth.yaml in your $HOME area. The content of it is something like: ::
+
+   $> cat ${HOME}/.lsst/db-auth.yaml
+   - url: postgresql://usdf-butler.slac.stanford.edu:5432/lsstdb1
+   username: rubin
+   password: *********************************************************
+
+Once you login to the login nodes, you can create a work
+area same as IDF: ::
+
+   $> mkdir $HOME/work
+   $> cd $HOME/work
+
+The environment setup script can be found on cvmfs: ::
+
+   $> latest=$(ls -td /cvmfs/sw.lsst.eu/linux-x86_64/panda_env/v* | head -1)
+   $> source $latest/setup_panda.sh w_2022_35
+
+setup_panda.sh sets up the PanDA and Rubin environment(It doesn't require the http proxy).
+Change *w_2022_35* to the version you will use. ::
+
+   $> cat $latest/setup_panda.sh
+   #!/bin/bash
+   if [ "$#" -ne 1 ]; then
+       echo "lsst_distrib version is required."
+       echo "example: source setup_panda.sh w_2022_35"
+   else
+       # setup Rubin env
+       # export LSST_VERSION=w_2022_35
+       export LSST_VERSION=$1
+       echo "setup lsst_distrib to ${LSST_VERSION}"
+       source /cvmfs/sw.lsst.eu/linux-x86_64/lsst_distrib/${LSST_VERSION}/loadLSST.bash
+       setup lsst_distrib
+
+       echo "Setup BPS PanDA environment"
+       # setup PanDA env. Will be a simple step when the deployment of PanDA is fully done.
+       export PANDA_CONFIG_ROOT=$HOME/.panda
+       export PANDA_URL_SSL=https://pandaserver-doma.cern.ch:25443/server/panda
+       export PANDA_URL=http://pandaserver-doma.cern.ch:25080/server/panda
+       export PANDACACHE_URL=$PANDA_URL_SSL
+       export PANDAMON_URL=https://panda-doma.cern.ch
+       export PANDA_AUTH=oidc
+       export PANDA_VERIFY_HOST=off
+       export PANDA_AUTH_VO=Rubin
+
+
+       # IDDS_CONFIG path depends on the weekly version
+       export PANDA_SYS=$CONDA_PREFIX
+       export IDDS_CONFIG=${PANDA_SYS}/etc/idds/idds.cfg.client.template
+
+       # WMS plugin
+       export BPS_WMS_SERVICE_CLASS=lsst.ctrl.bps.panda.PanDAService
+   fi
+
+Download an example bps yaml from the ctrl_bps_panda repository: ::
+
+   $> wget https://raw.githubusercontent.com/lsst/ctrl_bps_panda/main/python/lsst/ctrl/bps/panda/conf_example/test_usdf.yaml
+
+If you have already set up the enviroment for a release of the Rubin software distribution,
+you can also copy these two files from $CTRL_BPS_PANDA_DIR: ::
+
+   $> cp $CTRL_BPS_PANDA_DIR/python/lsst/ctrl/bps/panda/conf_example/test_usdf.yaml .
+
+To run jobs at S3DF, we need to make sure the ``fileDistributionEndPoint`` the one below for SDF: ::
+   $> cat test_usdf.yaml
+   # An example bps submission yaml
+   # Need to setup USDF before submitting the yaml
+   # source setupUSDF.sh
+
+   LSST_VERSION: w_2022_35
+
+   includeConfigs:
+   - ${CTRL_BPS_PANDA_DIR}/config/bps_usdf.yaml
+
+   pipelineYaml: "${DRP_PIPE_DIR}/pipelines/HSC/DRP-RC2.yaml#isr"
+
+   payload:
+     payloadName: testUSDF
+     inCollection: "HSC/RC2/defaults"
+     dataQuery: "exposure = 34342 AND detector = 10"
+
+     butlerConfig: /sdf/group/rubin/repo/main
+     fileDistributionEndPoint: "file:///sdf/group/rubin/sandbox/{operator}/panda_cache_box/{payloadFolder}/{uniqProcName}/"
+
+For different ``butlerConfig`` directory, you also need to grant group permission for PanDA to access the butler::
+
+   $> chmod g+rws /sdf/group/rubin/repo/main/u/<your_operator_name>
 
 You are ready to submit the workflow now: ::
 
