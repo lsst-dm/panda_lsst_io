@@ -104,10 +104,10 @@ type.
 USDF (SLAC) queues
 ------------------
 
-There are 6 PanDA queues at SLAC. The table below listed the PanDA queues
-and their corresponding SLURM queues in SLAC cluster system(The slurm queues
-are logical queues defined in the CE. Jobs will be submitted to slurm
-partition “rubin”).
+There are 6 PanDA queues at SLAC S3DF and 2 queues at SLAC SDF.
+The table below listed the PanDA queues and their corresponding SLURM
+queues in SLAC cluster system(The slurm queues are logical queues defined
+in the CE. Jobs will be submitted to slurm partition “rubin”).
 
 In the table, the minRSS and maxRSS means the range of required memory.
 ``RSS(resident set size)`` is the portion of memory occupied by a process
@@ -509,6 +509,10 @@ This is the request ID to use on the PanDA monitor.
 Submit a workflow to USDF
 -------------------------
 
+A similar RSP to the one on the IDF has been deployed for the USDF. But the environment
+is not ready yet. So for now a workflow is submitted from the Rubin Observatory development
+servers at SLAC. The login information can be found at: ::
+
 A similar RSP to the one on the IDF has been deployed for the USDF. But the
 environment is not ready yet. So for now a workflow is submitted from the
 Rubin Observatory development servers at SLAC. The login information can be
@@ -630,7 +634,8 @@ you can also copy these two files from $CTRL_BPS_PANDA_DIR: ::
 
    $> cp $CTRL_BPS_PANDA_DIR/python/lsst/ctrl/bps/panda/conf_example/test_usdf.yaml .
 
-To run jobs at S3DF, we need to change the ``fileDistributionEndPoint`` the one below for S3DF: ::
+Change ``LSST_VERSION`` to the version you want to use: ::
+
    $> cat test_usdf.yaml
    # An example bps submission yaml
    # Need to setup USDF before submitting the yaml
@@ -648,13 +653,12 @@ To run jobs at S3DF, we need to change the ``fileDistributionEndPoint`` the one 
      dataQuery: "exposure = 34342 AND detector = 10"
 
      butlerConfig: /sdf/group/rubin/repo/main
-     fileDistributionEndPoint: "file:///sdf/group/rubin/panda_jobs/{operator}/panda_cache_box/{payloadFolder}/{uniqProcName}/"
 
 For different ``butlerConfig`` directory, you also need to grant group permission for PanDA to access the butler::
 
    $> chmod g+rws /sdf/group/rubin/repo/main/u/<your_operator_name>
 
-You are ready to submit the workflow now: ::
+Now, you are ready to submit the workflow now: ::
 
    $> bps submit test_usdf.yaml
 
@@ -663,6 +667,7 @@ to use on the PanDA monitor.
 
 Submit a development workflow to USDF S3DF
 ------------------------------------------
+
 To submit a development workflow to S3DF, please at first check `Submit a workflow to USDF S3DF`_.
 
 Copy the environment setup script from cvmfs and update the lsst setup part to your private repo: ::
@@ -695,7 +700,6 @@ to your private development repo: ::
      dataQuery: "exposure = 34342 AND detector = 10"
 
      butlerConfig: /sdf/group/rubin/repo/main
-     fileDistributionEndPoint: "file:///sdf/group/rubin/panda_jobs/{operator}/panda_cache_box/{payloadFolder}/{uniqProcName}/"
 
    # To override the 'loadLSST.bash' and 'setup lsst_distrib' with your development repo.
    runnerCommand: >
@@ -713,26 +717,16 @@ to your private development repo: ::
 
 Submit a workflow to USDF SDF
 ------------------------------
-Make sure you have db-auth.yaml in your $HOME area. The content of it is something like: ::
+To submit a workflow to SDF, please at first check `Submit a workflow to USDF S3DF`_, since most of the
+steps are the same. Below we only list the difference.
 
-   $> cat ${HOME}/.lsst/db-auth.yaml
-   - url: postgresql://usdf-butler.slac.stanford.edu:5432/lsstdb1
-   username: rubin
-   password: *********************************************************
+``Warn``: You need to login to sdf cluster to submit jobs to SDF, since the share file system for sdf
+is different from s3df. Files created in s3df may not be available in sdf.
 
-Once you login to the login nodes, you can create a work
-area same as IDF: ::
-
-   $> mkdir $HOME/work
-   $> cd $HOME/work
-
-The environment setup script can be found on cvmfs: ::
+For sdf cluster, we can use the setup_panda.sh on cvmfs (It doesn't require the http proxy): ::
 
    $> latest=$(ls -td /cvmfs/sw.lsst.eu/linux-x86_64/panda_env/v* | head -1)
    $> source $latest/setup_panda.sh w_2022_35
-
-setup_panda.sh sets up the PanDA and Rubin environment(It doesn't require the http proxy).
-Change *w_2022_35* to the version you will use. ::
 
    $> cat $latest/setup_panda.sh
    #!/bin/bash
@@ -767,46 +761,18 @@ Change *w_2022_35* to the version you will use. ::
        export BPS_WMS_SERVICE_CLASS=lsst.ctrl.bps.panda.PanDAService
    fi
 
-Download an example bps yaml from the ctrl_bps_panda repository: ::
+By default, jobs will be scheduled to s3df cluster automatically if the cloud is "US" and Site is "SLAC"
+in the bps submission yaml file.::
 
-   $> wget https://raw.githubusercontent.com/lsst/ctrl_bps_panda/main/python/lsst/ctrl/bps/panda/conf_example/test_usdf.yaml
+   computeCloud: "US"
+   computeSite: "SLAC"
 
-If you have already set up the enviroment for a release of the Rubin software distribution,
-you can also copy these two files from $CTRL_BPS_PANDA_DIR: ::
+To submit jobs to sdf, you need to define the queue to ``SLAC_Rubin_SDF`` or ``SLAC_Rubin_SDF_Big``
+in the bps submission yaml file (for SLAC queues, see `USDF (SLAC) queues`_).::
 
-   $> cp $CTRL_BPS_PANDA_DIR/python/lsst/ctrl/bps/panda/conf_example/test_usdf.yaml .
+   queue: SLAC_Rubin_SDF
 
-To run jobs at S3DF, we need to make sure the ``fileDistributionEndPoint`` the one below for SDF: ::
-   $> cat test_usdf.yaml
-   # An example bps submission yaml
-   # Need to setup USDF before submitting the yaml
-   # source setupUSDF.sh
-
-   LSST_VERSION: w_2022_35
-
-   includeConfigs:
-   - ${CTRL_BPS_PANDA_DIR}/config/bps_usdf.yaml
-
-   pipelineYaml: "${DRP_PIPE_DIR}/pipelines/HSC/DRP-RC2.yaml#isr"
-
-   payload:
-     payloadName: testUSDF
-     inCollection: "HSC/RC2/defaults"
-     dataQuery: "exposure = 34342 AND detector = 10"
-
-     butlerConfig: /sdf/group/rubin/repo/main
-     fileDistributionEndPoint: "file:///sdf/group/rubin/sandbox/{operator}/panda_cache_box/{payloadFolder}/{uniqProcName}/"
-
-For different ``butlerConfig`` directory, you also need to grant group permission for PanDA to access the butler::
-
-   $> chmod g+rws /sdf/group/rubin/repo/main/u/<your_operator_name>
-
-You are ready to submit the workflow now: ::
-
-   $> bps submit test_usdf.yaml
-
-Write down the "Run Id" on the submission screen. It is the request ID
-to use on the PanDA monitor.
+The other parts to submit jobs to sdf are the same as to submit jobs to S3DF.
 
 How to submit a workflow from the interim cluster SDF
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
