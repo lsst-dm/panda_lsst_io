@@ -424,6 +424,7 @@ Ping the PanDA system to check whether the service is ok::
 
 Submit a workflow to IDF
 ------------------------
+
 The Rubin Science Platform (RSP) can be accessed from the JupyterLab
 notebook configured for the IDF at: ::
 
@@ -452,7 +453,8 @@ Copy an example bps yaml from the package $CTRL_BPS_PANDA_DIR: ::
 
    $> cp $CTRL_BPS_PANDA_DIR/python/lsst/ctrl/bps/panda/conf_example/test_idf.yaml .
 
-Change *sw_image* to the version the same as you launched the server, e.g. w_2022_32: ::
+Change *sw_image* to the version the same as you launched the server, e.g.
+w_2022_32: ::
 
    $> cat test_idf.yaml
    # An example bps submission yaml
@@ -472,74 +474,79 @@ Now, you can submit the workflow to PanDA with the command: ::
 
    $> bps submit test_idf.yaml
 
-When the submission is successful, you can find the "Run Id" on the screen. This is the
-request ID to use on the PanDA monitor.
+When the submission is successful, you can find the "Run Id" on the screen.
+This is the request ID to use on the PanDA monitor.
 
 Submit a workflow to USDF
 -------------------------
-A similar RSP to the one on the IDF has been deployed for the USDF. But the environment
-is not ready yet. So for now a workflow is submitted from the Rubin Observatory development
-servers at SLAC. The login information can be found at: ::
 
-    https://developer.lsst.io/usdf/lsst-login.html
+A similar RSP to the one on the IDF has been deployed for the USDF. But the
+environment is not ready yet. So for now a workflow is submitted from the
+Rubin Observatory development servers at SLAC. The login information can be
+found at: ::
 
-Make sure you have db-auth.yaml in your $HOME area. The content of it is something like: ::
+   https://developer.lsst.io/usdf/lsst-login.html
+
+Make sure you have db-auth.yaml in your $HOME area. The content of it is
+something like: ::
 
    $> cat ${HOME}/.lsst/db-auth.yaml
    - url: postgresql://usdf-butler.slac.stanford.edu:5432/lsstdb1
    username: rubin
    password: *********************************************************
 
-Once you login to rubin-devl.slac.stanford.edu from the jump nodes, you can create a work
-area same as IDF: ::
+Once you login to rubin-devl (note: do not add the .slac.stanford.edu
+postfix!) from the jump nodes, you can create a work area same as IDF: ::
 
    $> mkdir $HOME/work
    $> cd $HOME/work
 
-Download the enviroment setup script and an example bps yaml from the ctrl_bps_panda
-repository: ::
+To double check you are on the S3DF cluster, you should see sdfrome###
+( not rubin-devl ) in your shell prompt.
 
-   $> wget https://raw.githubusercontent.com/lsst/ctrl_bps_panda/main/python/lsst/ctrl/bps/panda/conf_example/setupUSDF.sh
+Download the enviroment setup script and an example bps yaml from the
+ctrl_bps_panda repository: ::
+
+   $> wget https://raw.githubusercontent.com/lsst/ctrl_bps_panda/main/python/lsst/ctrl/bps/panda/conf_example/setup_panda.sh
    $> wget https://raw.githubusercontent.com/lsst/ctrl_bps_panda/main/python/lsst/ctrl/bps/panda/conf_example/test_usdf.yaml
 
-If you have already set up the enviroment for a release of the Rubin software distribution, you can also copy these two files from
-$CTRL_BPS_PANDA_DIR: ::
+If you have already set up the enviroment for a release of the Rubin
+software distribution ( since w_2022_41 ), you can also copy these two
+files from $CTRL_BPS_PANDA_DIR: ::
 
-   $> cp $CTRL_BPS_PANDA_DIR/python/lsst/ctrl/bps/panda/conf_example/setupUSDF.sh .
+   $> cp $CTRL_BPS_PANDA_DIR/python/lsst/ctrl/bps/panda/conf_example/setup_panda.sh .
    $> cp $CTRL_BPS_PANDA_DIR/python/lsst/ctrl/bps/panda/conf_example/test_usdf.yaml .
 
-setupUSDF.sh sets up the PanDA and Rubin environment. Change *$LSST_VERSION* to the version
-you will use, e.g. w_2022_32: ::
+setup_panda.sh sets up the PanDA and Rubin environment. ::
 
-   $> cat setupUSDF.sh
+   $> cat setup_panda.sh
    #!/bin/bash
-   # setup Rubin env
-   export LSST_VERSION=w_2022_32
-   source /cvmfs/sw.lsst.eu/linux-x86_64/lsst_distrib/${LSST_VERSION}/loadLSST.bash
-   setup lsst_distrib
+   # To setup PanDA: source setup_panda.sh w_2022_32
+   # If using SDF: source setup_panda.sh w_2022_32 sdf
 
-   # setup PanDA env. Will be a simple step when the deployment of PanDA is fully done.
-   export PANDA_CONFIG_ROOT=$HOME
-   export PANDA_URL_SSL=https://pandaserver-doma.cern.ch:25443/server/panda
-   export PANDA_URL=http://pandaserver-doma.cern.ch:25080/server/panda
-   export PANDAMON_URL=https://panda-doma.cern.ch
-   export PANDA_AUTH=oidc
-   export PANDA_VERIFY_HOST=off
-   export PANDA_AUTH_VO=Rubin
+   latest=$(ls -td /cvmfs/sw.lsst.eu/linux-x86_64/panda_env/v* | head -1)
 
-   # IDDS_CONFIG path depends on the weekly version
-   export PANDA_SYS=$CONDA_PREFIX
-   export IDDS_CONFIG=${PANDA_SYS}/etc/idds/idds.cfg.client.template
+   usdf_cluster=$2
+   if [ "$usdf_cluster" == "sdf" ]; then
+      setupScript=${latest}/setup_panda.sh
+      echo "Working on cluster: " $usdf_cluster
+   else
+      setupScript=${latest}/setup_panda_s3df.sh
+   fi
+   echo "setup from:" $setupScript
 
-   # WMS plugin
-   export BPS_WMS_SERVICE_CLASS=lsst.ctrl.bps.panda.PanDAService
+   source $setupScript $1
 
-Change *LSST_VERSION* in the example yaml to the same as specified in setupUSDF.sh: ::
+Choose the lsst_distrib version e.g. w_2022_32, then set up the PanDA
+and the Rubin software with: ::
+
+   $> source setup_panda.sh w_2022_32
+
+Change *LSST_VERSION* in the example yaml to what you choose: ::
 
    $> cat test_usdf.yaml
    # An example bps submission yaml
    # Need to setup USDF before submitting the yaml
-   # source setupUSDF.sh
 
    LSST_VERSION: w_2022_32
 
@@ -553,16 +560,61 @@ Change *LSST_VERSION* in the example yaml to the same as specified in setupUSDF.
      inCollection: "HSC/RC2/defaults"
      dataQuery: "exposure = 34342 AND detector = 10"
 
-Set up the Rubin Observatory environment and the full set of packages with: ::
-
-   $> source setupUSDF.sh
-
 You are ready to submit the workflow now: ::
 
    $> bps submit test_usdf.yaml
 
 Write down the "Run Id" on the submission screen. It is the request ID
 to use on the PanDA monitor.
+
+How to submit a workflow from the interim cluster SDF
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To use the SDF cluster, login to rubin-devl.slac.stanford.edu ( note
+the full postfix ) from the jump nodes. You should see rubin-devl in
+your shell prompt.
+
+Get an example bps yaml from the ctrl_bps_panda repository: ::
+
+   wget https://raw.githubusercontent.com/lsst/ctrl_bps_panda/main/python/lsst/ctrl/bps/panda/conf_example/test_sdf.yaml
+
+or copy it from $CTRL_BPS_PANDA_DIR: ::
+
+   $> cp $CTRL_BPS_PANDA_DIR/python/lsst/ctrl/bps/panda/conf_example/test_sdf.yaml .
+
+The difference in this yaml file is that it specifies the PanDA queue and
+request different memory for executionButler. Choose the lsst_distrib version
+e.g. w_2022_32, then set up the PanDA and the Rubin software with: ::
+
+   $> source setup_panda.sh w_2022_32 sdf
+
+Change *LSST_VERSION* in the example yaml accordingly: ::
+
+   $> cat test_sdf.yaml
+   # An example bps submission yaml
+   # Need to setup USDF before submitting the yaml
+
+   LSST_VERSION: w_2022_32
+
+   includeConfigs:
+   - ${CTRL_BPS_PANDA_DIR}/config/bps_usdf.yaml
+
+   queue: "SLAC_Rubin_SDF"
+
+   executionButler:
+     requestMemory: 4000
+     queue: "SLAC_Rubin_SDF"
+
+   pipelineYaml: "${DRP_PIPE_DIR}/pipelines/HSC/DRP-RC2.yaml#isr"
+
+   payload:
+     payloadName: testUSDF_sdf
+     inCollection: "HSC/RC2/defaults"
+     dataQuery: "exposure = 34342 AND detector = 10"
+
+Now ready to submit the workflow: ::
+
+   $> bps submit test_sdf.yaml
 
 How to monitor workflow
 =======================
