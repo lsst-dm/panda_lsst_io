@@ -512,13 +512,6 @@ environment is not ready yet. So for now a workflow is submitted from the
 Rubin Observatory development servers at SLAC. The login information can be
 found at: ::
 
-A similar RSP to the one on the IDF has been deployed for the USDF. But the
-environment is not ready yet. So for now a workflow is submitted from the
-Rubin Observatory development servers at SLAC. The login information can be
-found at: ::
-
-   https://developer.lsst.io/usdf/lsst-login.html
-
    https://developer.lsst.io/usdf/lsst-login.html
 
 Make sure you have db-auth.yaml in your $HOME area. The content of it is
@@ -537,48 +530,6 @@ postfix!) from the jump nodes, you can create a work area same as IDF: ::
 
 To double check you are on the S3DF cluster, you should see sdfrome###
 ( not rubin-devl ) in your shell prompt.
-
-Download the enviroment setup script and an example bps yaml from the
-ctrl_bps_panda repository: ::
-
-   $> wget https://raw.githubusercontent.com/lsst/ctrl_bps_panda/main/python/lsst/ctrl/bps/panda/conf_example/setup_panda.sh
-   $> wget https://raw.githubusercontent.com/lsst/ctrl_bps_panda/main/python/lsst/ctrl/bps/panda/conf_example/test_usdf.yaml
-
-If you have already set up the enviroment for a release of the Rubin
-software distribution ( since w_2022_41 ), you can also copy these two
-files from $CTRL_BPS_PANDA_DIR: ::
-
-   $> cp $CTRL_BPS_PANDA_DIR/python/lsst/ctrl/bps/panda/conf_example/setup_panda.sh .
-   $> cp $CTRL_BPS_PANDA_DIR/python/lsst/ctrl/bps/panda/conf_example/test_usdf.yaml .
-
-setup_panda.sh sets up the PanDA and Rubin environment. ::
-
-   $> cat setup_panda.sh
-   #!/bin/bash
-   # To setup PanDA: source setup_panda.sh w_2022_32
-   # If using SDF: source setup_panda.sh w_2022_32 sdf
-
-   latest=$(ls -td /cvmfs/sw.lsst.eu/linux-x86_64/panda_env/v* | head -1)
-
-   usdf_cluster=$2
-   if [ "$usdf_cluster" == "sdf" ]; then
-      setupScript=${latest}/setup_panda.sh
-      echo "Working on cluster: " $usdf_cluster
-   else
-      setupScript=${latest}/setup_panda_s3df.sh
-   fi
-   echo "setup from:" $setupScript
-
-   source $setupScript $1
-
-Choose the lsst_distrib version e.g. w_2022_32, then set up the PanDA
-and the Rubin software with: ::
-
-   $> source setup_panda.sh w_2022_32
-
-Change *LSST_VERSION* in the example yaml to what you choose: ::
-
-The environment setup script can be found on cvmfs: ::
 
 Download the enviroment setup script and an example bps yaml from the
 ctrl_bps_panda repository: ::
@@ -752,55 +703,6 @@ to your private development repo: ::
       ln -fs ${PWD}/prmon.json ./memory_monitor_summary.json;
       exit $retStat
 
-
-How to submit a workflow from the interim cluster SDF
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-To use the SDF cluster, login to rubin-devl.slac.stanford.edu ( note
-the full postfix ) from the jump nodes. You should see rubin-devl in
-your shell prompt.
-
-Get an example bps yaml from the ctrl_bps_panda repository: ::
-
-   wget https://raw.githubusercontent.com/lsst/ctrl_bps_panda/main/python/lsst/ctrl/bps/panda/conf_example/test_sdf.yaml
-
-or copy it from $CTRL_BPS_PANDA_DIR: ::
-
-   $> cp $CTRL_BPS_PANDA_DIR/python/lsst/ctrl/bps/panda/conf_example/test_sdf.yaml .
-
-The difference in this yaml file is that it specifies the PanDA queue and
-request different memory for executionButler. Choose the lsst_distrib version
-e.g. w_2022_32, then set up the PanDA and the Rubin software with: ::
-
-   $> source setup_panda.sh w_2022_32 sdf
-
-Change *LSST_VERSION* in the example yaml accordingly: ::
-
-   $> cat test_sdf.yaml
-   # An example bps submission yaml
-   # Need to setup USDF before submitting the yaml
-
-   LSST_VERSION: w_2022_32
-
-   includeConfigs:
-   - ${CTRL_BPS_PANDA_DIR}/config/bps_usdf.yaml
-
-   queue: "SLAC_Rubin_SDF"
-
-   executionButler:
-     requestMemory: 4000
-     queue: "SLAC_Rubin_SDF"
-
-   pipelineYaml: "${DRP_PIPE_DIR}/pipelines/HSC/DRP-RC2.yaml#isr"
-
-   payload:
-     payloadName: testUSDF_sdf
-     inCollection: "HSC/RC2/defaults"
-     dataQuery: "exposure = 34342 AND detector = 10"
-
-Now ready to submit the workflow: ::
-
-   $> bps submit test_sdf.yaml
 
 How to monitor workflow
 =======================
