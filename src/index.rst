@@ -643,10 +643,6 @@ Change *LSST_VERSION* in the example yaml accordingly: ::
      inCollection: "HSC/RC2/defaults"
      dataQuery: "exposure = 34342 AND detector = 10"
 
-For different ``butlerConfig`` directory, you also need to grant group permission for PanDA to access the butler::
-
-   $> chmod g+rws /sdf/group/rubin/repo/main/u/<your_operator_name>
-
 Now ready to submit the workflow: ::
 
    $> bps submit test_sdf.yaml
@@ -669,8 +665,7 @@ setup part to your private repo: ::
 
    $> chmod g+rxs <your private development repo>
 
-For the submission yaml file ``test_usdf.yaml``, you need to change the ``runnercommand`` to point
-to your private development repo: ::
+For the submission yaml file ``test_usdf.yaml``, you need to change the ``runnercommand`` to point to your private development repo: ::
 
    $> cat test_usdf.yaml
    # An example bps submission yaml
@@ -694,7 +689,8 @@ to your private development repo: ::
       unset PYTHONPATH;
       source /cvmfs/sw.lsst.eu/linux-x86_64/lsst_distrib/{LSST_VERSION}/loadLSST.bash;
       pwd; ls -al;
-      setup lsst_distrib;
+      # setup lsst_distrib;
+      setup -k -r /path/to/your/test/package;
       prmon -i 5 -f ${PWD}/prmon.txt -j ${PWD}/prmon.json --
       python3 ${CTRL_BPS_PANDA_DIR}/python/lsst/ctrl/bps/panda/edgenode/cmd_line_decoder.py _cmd_line_;
       retStat=$?;
