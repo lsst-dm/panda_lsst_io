@@ -672,7 +672,7 @@ For the submission yaml file ``test_usdf.yaml``, you need to change the ``runner
    # Need to setup USDF before submitting the yaml
    # source setupUSDF.sh
 
-   LSST_VERSION: w_2022_35
+   LSST_VERSION: w_2022_32
 
    includeConfigs:
    - ${CTRL_BPS_PANDA_DIR}/config/bps_usdf.yaml
