@@ -24,7 +24,7 @@ discrepancies please inform the authors using provided Support Channels.
 
    `Submit a workflow to USDF <#submit-a-workflow-to-usdf>`__
 
-   `Submit a development workflow to USDF <#submit-a-development-workflow-to-usdf>`__
+   `Submit a workflow to USDF (Developer) <#submit-a-workflow-to-usdf-developer>`__
 
 `How to monitor workflow <#how-to-monitor-workflow>`__
 
@@ -587,7 +587,9 @@ Change *LSST_VERSION* in the example yaml to what you choose: ::
      inCollection: "HSC/RC2/defaults"
      dataQuery: "exposure = 34342 AND detector = 10"
 
-For different ``butlerConfig`` directory, you also need to grant group permission for PanDA to access the butler::
+For the first time PanDA uses the higher-level butler directories (e.g., first PanDA run for u/<your_operator_name>). If permissions are not set right, the pipetaskInit job will die with a ``Failed to execute payload:[Errno 13] Permission denied: '/sdf/group/rubin/repo/main/<output collection>'`` message. 
+Note: one cannot pre-test permissions by manually running pipetask as the PanDA job is executed as a special user.
+In this case, you need to grant group permission for PanDA to access the butler directory.::
 
    $> chmod -R g+rws /sdf/group/rubin/repo/main/u/<your_operator_name>
 
@@ -647,19 +649,19 @@ Now ready to submit the workflow: ::
 
    $> bps submit test_sdf.yaml
 
-Submit a development workflow to USDF
+Submit a workflow to USDF (Developer)
 -------------------------------------
 
-To submit a development workflow to S3DF, please at first check `Submit a workflow to USDF`_.
+For developer to submit a workflow to S3DF with local software in addition to an LSST stack, please at first check `Submit a workflow to USDF`_.
 Here we only list the differences.
 
 Copy the environment setup script from cvmfs to your local directory and update the lsst
 setup part to your private repo: ::
 
    $> latest=$(ls -td /cvmfs/sw.lsst.eu/linux-x86_64/panda_env/v* | head -1)
-   $> cp $latest/setup_panda_s3df.sh .
-   $> <update setup_panda_s3df.sh>
-   $> source ./setup_panda_s3df.sh
+   $> cp $latest/setup_panda_s3df.sh /local/directory/
+   $> <update /local/directory/setup_panda_s3df.sh>
+   $> source /local/directory/setup_panda_s3df.sh
 
 ``Note``: Make sure PanDA can read your private repo: ::
 
