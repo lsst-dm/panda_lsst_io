@@ -589,7 +589,7 @@ Change *LSST_VERSION* in the example yaml to what you choose: ::
 
 For different ``butlerConfig`` directory, you also need to grant group permission for PanDA to access the butler::
 
-   $> chmod g+rws /sdf/group/rubin/repo/main/u/<your_operator_name>
+   $> chmod -R g+rws /sdf/group/rubin/repo/main/u/<your_operator_name>
 
 You are ready to submit the workflow now: ::
 
@@ -663,7 +663,7 @@ setup part to your private repo: ::
 
 ``Note``: Make sure PanDA can read your private repo: ::
 
-   $> chmod g+rxs <your private development repo>
+   $> chmod -R g+rxs <your private development repo>
 
 For the submission yaml file ``test_usdf.yaml``, you need to change the ``runnercommand`` to point to your private development repo: ::
 
@@ -684,13 +684,15 @@ For the submission yaml file ``test_usdf.yaml``, you need to change the ``runner
      inCollection: "HSC/RC2/defaults"
      dataQuery: "exposure = 34342 AND detector = 10"
 
-   # To override the 'loadLSST.bash' and 'setup lsst_distrib' with your development repo.
+   # To replace 'loadLSST.bash' and 'setup lsst_distrib' with your local setup script..
    runnerCommand: >
       unset PYTHONPATH;
-      source /cvmfs/sw.lsst.eu/linux-x86_64/lsst_distrib/{LSST_VERSION}/loadLSST.bash;
+      # source /cvmfs/sw.lsst.eu/linux-x86_64/lsst_distrib/{LSST_VERSION}/loadLSST.bash;
+      source /path/to/your/test/package/setup/script;
       pwd; ls -al;
       # setup lsst_distrib;
       setup -k -r /path/to/your/test/package;
+
       prmon -i 5 -f ${PWD}/prmon.txt -j ${PWD}/prmon.json --
       python3 ${CTRL_BPS_PANDA_DIR}/python/lsst/ctrl/bps/panda/edgenode/cmd_line_decoder.py _cmd_line_;
       retStat=$?;
