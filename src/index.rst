@@ -688,7 +688,7 @@ For the submission yaml file ``test_usdf.yaml``, you need to change the ``setupL
    # setup private repo
    setupLSSTEnv: >
      source /cvmfs/sw.lsst.eu/linux-x86_64/lsst_distrib/{LSST_VERSION}/loadLSST.bash;
-     pwd; ls -al; 
+     pwd; ls -al;
      setup lsst_distrib;
      setup -k -r /path/to/your/test/package;
 
