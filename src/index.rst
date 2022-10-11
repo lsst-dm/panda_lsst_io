@@ -667,7 +667,7 @@ setup part to your private repo: ::
 
    $> chmod -R g+rxs <your private development repo>
 
-For the submission yaml file ``test_usdf.yaml``, you need to change the ``runnercommand`` to point to your private development repo: ::
+For the submission yaml file ``test_usdf.yaml``, you need to change the ``setupLSSTEnv`` to point to your private development repo: ::
 
    $> cat test_usdf.yaml
    # An example bps submission yaml
@@ -686,22 +686,8 @@ For the submission yaml file ``test_usdf.yaml``, you need to change the ``runner
      inCollection: "HSC/RC2/defaults"
      dataQuery: "exposure = 34342 AND detector = 10"
 
-   # To replace 'loadLSST.bash' and 'setup lsst_distrib' with your local setup script..
-   runnerCommand: >
-      unset PYTHONPATH;
-      # source /cvmfs/sw.lsst.eu/linux-x86_64/lsst_distrib/{LSST_VERSION}/loadLSST.bash;
-      source /path/to/your/test/package/setup/script;
-      pwd; ls -al;
-      # setup lsst_distrib;
-      setup -k -r /path/to/your/test/package;
-
-      prmon -i 5 -f ${PWD}/prmon.txt -j ${PWD}/prmon.json --
-      python3 ${CTRL_BPS_PANDA_DIR}/python/lsst/ctrl/bps/panda/edgenode/cmd_line_decoder.py _cmd_line_;
-      retStat=$?;
-      rm -fr EXEC_REPO-*;
-      ln -fs ${PWD}/prmon.txt ./memory_monitor_output.txt;
-      ln -fs ${PWD}/prmon.json ./memory_monitor_summary.json;
-      exit $retStat
+   # setup private repo
+   setupLSSTEnv: "source /cvmfs/sw.lsst.eu/linux-x86_64/lsst_distrib/{LSST_VERSION}/loadLSST.bash; pwd; ls -al; setup lsst_distrib; setup -k -r /path/to/your/test/package;"
 
 
 How to monitor workflow
