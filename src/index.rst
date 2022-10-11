@@ -24,6 +24,8 @@ discrepancies please inform the authors using provided Support Channels.
 
    `Submit a workflow to USDF <#submit-a-workflow-to-usdf>`__
 
+   `Submit a workflow to USDF (Developer) <#submit-a-workflow-to-usdf-developer>`__
+
 `How to monitor workflow <#how-to-monitor-workflow>`__
 
    `Workflow progress <#workflow-progress>`__
@@ -213,8 +215,33 @@ and uptimes and as such should not be used for regular runs
      - 0GB
      - 4GB
      - pull
-     - on
+     - off
 
+Here are queues for the ``SDF`` cluster. These queues are brokeroff. Users need to
+specify them in order to submit jobs to them.
+
+.. list-table:: USDF SDF (SLAC) PanDA Queues
+   :widths: 50 25 25 25 25 25
+   :header-rows: 1
+
+   * - PanDA Queue
+     - slurm queue
+     - minRSS
+     - maxRSS
+     - Harvester mode
+     - Brokerage
+   * - SLAC_Rubin_SDF
+     - rubin
+     - 0GB
+     - 4GB
+     - pull
+     - off
+   * - SLAC_Rubin_SDF_Big
+     - rubin
+     - 0GB
+     - 220GB
+     - push
+     - off
 
 How to submit jobs to USDF
 --------------------------
@@ -560,6 +587,12 @@ Change *LSST_VERSION* in the example yaml to what you choose: ::
      inCollection: "HSC/RC2/defaults"
      dataQuery: "exposure = 34342 AND detector = 10"
 
+For the first time PanDA uses the higher-level butler directories (e.g., first PanDA run for u/<your_operator_name>). If permissions are not set right, the pipetaskInit job will die with a ``Failed to execute payload:[Errno 13] Permission denied: '/sdf/group/rubin/repo/main/<output collection>'`` message.
+Note: one cannot pre-test permissions by manually running pipetask as the PanDA job is executed as a special user.
+In this case, you need to grant group permission for PanDA to access the butler directory.::
+
+   $> chmod -R g+rws /sdf/group/rubin/repo/main/u/<your_operator_name>
+
 You are ready to submit the workflow now: ::
 
    $> bps submit test_usdf.yaml
@@ -603,7 +636,7 @@ Change *LSST_VERSION* in the example yaml accordingly: ::
 
    executionButler:
      requestMemory: 4000
-     queue: "SLAC_Rubin_SDF"
+     queue: "SLAC_Rubin_SDF_Big"
 
    pipelineYaml: "${DRP_PIPE_DIR}/pipelines/HSC/DRP-RC2.yaml#isr"
 
@@ -615,6 +648,49 @@ Change *LSST_VERSION* in the example yaml accordingly: ::
 Now ready to submit the workflow: ::
 
    $> bps submit test_sdf.yaml
+
+Submit a workflow to USDF (Developer)
+-------------------------------------
+
+For developer to submit a workflow to S3DF with local software in addition to an LSST stack, please at first check `Submit a workflow to USDF`_.
+Here we only list the differences.
+
+Copy the environment setup script from cvmfs to your local directory and update the lsst setup part to your private repo: ::
+
+   $> latest=$(ls -td /cvmfs/sw.lsst.eu/linux-x86_64/panda_env/v* | head -1)
+   $> cp $latest/setup_panda_s3df.sh /local/directory/
+   $> <update /local/directory/setup_panda_s3df.sh>
+   $> source /local/directory/setup_panda_s3df.sh
+
+``Note``: Make sure PanDA can read your private repo: ::
+
+   $> chmod -R g+rxs <your private development repo>
+
+For the submission yaml file ``test_usdf.yaml``, you need to change the ``setupLSSTEnv`` to point to your private development repo: ::
+
+   $> cat test_usdf.yaml
+   # An example bps submission yaml
+   # Need to setup USDF before submitting the yaml
+   # source setupUSDF.sh
+
+   LSST_VERSION: w_2022_32
+
+   includeConfigs:
+   - ${CTRL_BPS_PANDA_DIR}/config/bps_usdf.yaml
+
+   pipelineYaml: "${DRP_PIPE_DIR}/pipelines/HSC/DRP-RC2.yaml#isr"
+
+   payload:
+     payloadName: testUSDF
+     inCollection: "HSC/RC2/defaults"
+     dataQuery: "exposure = 34342 AND detector = 10"
+
+   # setup private repo
+   setupLSSTEnv: >
+     source /cvmfs/sw.lsst.eu/linux-x86_64/lsst_distrib/{LSST_VERSION}/loadLSST.bash;
+     pwd; ls -al;
+     setup lsst_distrib;
+     setup -k -r /path/to/your/test/package;
 
 How to monitor workflow
 =======================
