@@ -26,6 +26,8 @@ discrepancies please inform the authors using provided Support Channels.
 
    `Submit a workflow to USDF (Developer) <#submit-a-workflow-to-usdf-developer>`__
 
+   `Submit a workflow to FrDF <#submit-a-workflow-to-frdf>`__
+
 `How to monitor workflow <#how-to-monitor-workflow>`__
 
    `Workflow progress <#workflow-progress>`__
@@ -691,6 +693,83 @@ For the submission yaml file ``test_usdf.yaml``, you need to change the ``setupL
      pwd; ls -al;
      setup lsst_distrib;
      setup -k -r /path/to/your/test/package;
+
+Submit a workflow to FrDF
+-------------------------
+
+Currently we need to submit Rubin jobs to FrDF from FrDF. Here are some instuctions.
+
+At first you need to login to FrDF. ::
+
+   > ssh <FrDF>
+
+Make sure you have butler db-auth.yaml in your $HOME area. The content of it is
+something like(It's USDF butler. You need to change it to FrDF butler.): ::
+
+   $> cat ${HOME}/.lsst/db-auth.yaml
+   - url: postgresql://usdf-butler.slac.stanford.edu:5432/lsstdb1
+   username: rubin
+   password: *********************************************************
+
+Once you login to FrDF, you can create a work area: ::
+
+   $> mkdir $HOME/work
+   $> cd $HOME/work
+
+Sets up the PanDA and Rubin environment. ::
+
+   $> cat setup_panda.sh
+   #!/bin/bash
+   # To setup PanDA: source setup_panda.sh w_2022_32
+
+   latest=$(ls -td /cvmfs/sw.lsst.eu/linux-x86_64/panda_env/v* | head -1)
+   setupScript=${latest}/setup_panda.sh
+   echo "setup from:" $setupScript
+   source $setupScript $1
+
+   $> source setup_panda.sh w_2022_32
+
+Get the submission file: ::
+
+   $> wget https://raw.githubusercontent.com/lsst/ctrl_bps_panda/main/python/lsst/ctrl/bps/panda/conf_example/test_usdf.yaml
+
+To submit tasks to FrDF, you need to update ``butlerConfig`` and ``fileDistributionEndPoint``.
+For the first time PanDA uses the higher-level butler directories (e.g., first PanDA run for u/<your_operator_name>). If permissions are not set right, the pipetaskInit job will die with a ``Failed to execute payload:[Errno 13] Permission denied: '<butlerConfig directory>/<output collection>'`` message.
+Note: one cannot pre-test permissions by manually running pipetask as the PanDA job is executed as a special user.
+In this case, you need to grant group permission for PanDA to access the butler directory.::
+
+   $> chmod -R g+rws <Your butler execution directory>/u/<your_operator_name>
+
+For the ``fileDistributionEndPoint`` directory, ``bps submit`` will write some files there. We need to make sure that the pilot is able to read files in this directory. ::
+
+   $> cat test_usdf.yaml
+   # An example bps submission yaml
+   # Need to setup USDF before submitting the yaml
+   # source setupUSDF.sh
+
+   LSST_VERSION: w_2022_32
+
+   includeConfigs:
+   - ${CTRL_BPS_PANDA_DIR}/config/bps_usdf.yaml
+
+   pipelineYaml: "${DRP_PIPE_DIR}/pipelines/HSC/DRP-RC2.yaml#isr"
+
+   payload:
+     payloadName: testUSDF
+     inCollection: "HSC/RC2/defaults"
+     dataQuery: "exposure = 34342 AND detector = 10"
+
+     # butlerConfig: /sdf/group/rubin/repo/main
+     butlerConfig: <FrDF Execution butler>
+     # fileDistributionEndPoint: "file:///sdf/group/rubin/sandbox/{operator}/panda_cache_box/{payloadFolder}/{uniqProcName}/"
+     fileDistributionEndPoint: "<FrDF share directory readable by pilot account>/{operator}/panda_cache_box/{payloadFolder}/{uniqProcName}/"
+
+You are ready to submit the workflow now: ::
+
+   $> bps submit test_usdf.yaml
+
+Write down the "Run Id" on the submission screen. It is the request ID
+to use on the PanDA monitor.
 
 How to monitor workflow
 =======================
