@@ -138,43 +138,43 @@ which manages to setup pre-environment, monitor the user jobs, upload logs to
 global storages and manages other site specific settings. The PanDA system uses
 Harvester to manage the pilots. It can work with ``pull`` and ``push`` mode.
 
-The ``pull`` mode::
+The ``pull`` mode:
 
-  * For pull mode, PanDA will submit empty pilots to the cluster maybe even
-    before the user jobs are submitted. When the pilot starts to run, pilot
-    will pull the user jobs to run.
+- For pull mode, PanDA will submit empty pilots to the cluster maybe even
+  before the user jobs are submitted. When the pilot starts to run, pilot
+  will pull the user jobs to run.
 
-  * In pull mode, pilot will be submitted with the maxRSS of the PanDA queue.
-    So for a user job with "requestMemory: 5000", it will be scheduled to
-    SLAC_Rubin_medium. For SLAC_Rubin_medium queue, the pilot will be submitted
-    with 8GB. So this user job can use in fact no more than 8GB memory (Even
-    the requestMemory is 5GB, in this case it can use no more than 8GB before
-    it's killed).
+- In pull mode, pilot will be submitted with the maxRSS of the PanDA queue.
+  So for a user job with "requestMemory: 5000", it will be scheduled to
+  SLAC_Rubin_medium. For SLAC_Rubin_medium queue, the pilot will be submitted
+  with 8GB. So this user job can use in fact no more than 8GB memory (Even
+  the requestMemory is 5GB, in this case it can use no more than 8GB before
+  it's killed).
 
-  * For pull mode, one pilot can run multiple user jobs. So different user jobs
-    requested 5GB, 6GB or 7GB are possible to go to the same pilot. It's an
-    efficient way for short jobs. For short jobs, pull mode saves a lot of
-    environment setup time.
+- For pull mode, one pilot can run multiple user jobs. So different user jobs
+  requested 5GB, 6GB or 7GB are possible to go to the same pilot. It's an
+  efficient way for short jobs. For short jobs, pull mode saves a lot of
+  environment setup time.
 
-  * For pull mode, when there are no user jobs. PanDA may still submit a few
-    pilots to keep the system ready for user jobs(1~3 pilots normally. It depends
-    on the configuration. If you want the system to have a lot of pilots ready
-    at any time, the configured number can be high). When there are user jobs,
-    PanDA starts to boost to submit more pilots.
+- For pull mode, when there are no user jobs. PanDA may still submit a few
+  pilots to keep the system ready for user jobs(1~3 pilots normally. It depends
+  on the configuration. If you want the system to have a lot of pilots ready
+  at any time, the configured number can be high). When there are user jobs,
+  PanDA starts to boost to submit more pilots.
 
-The ``push`` mode::
+The ``push`` mode:
 
-  * For push mode, pilot is submitted together with a user job (not before the
-    user job). For push mode, one pilot is bound with one user job. In this
-    mode, one pilot will only run that one job before it exits and the slurm
-    job completes.
+- For push mode, pilot is submitted together with a user job (not before the
+  user job). For push mode, one pilot is bound with one user job. In this
+  mode, one pilot will only run that one job before it exits and the slurm
+  job completes.
 
-  * Since the pilot is submitted after the user job is created, pilot will be
-    submitted with the exact requestMemory of the job. For example, if a user
-    job requests 20GB memory. The job will be scheduled to  SLAC_Rubin_Extra_Himem.
-    If this queue was pull mode, the pilot would be submitted with 220GB (the maxRSS).
-    However, since this queue is push mode, the pilot will be submitted with
-    the requestMemory 20GB.
+- Since the pilot is submitted after the user job is created, pilot will be
+  submitted with the exact requestMemory of the job. For example, if a user
+  job requests 20GB memory. The job will be scheduled to  SLAC_Rubin_Extra_Himem.
+  If this queue was pull mode, the pilot would be submitted with 220GB (the maxRSS).
+  However, since this queue is push mode, the pilot will be submitted with
+  the requestMemory 20GB.
 
 The concept behind the definitions of the PanDA queues at SLAC is for efficient use of the
 slurm cluster, to balance time efficiency for quick jobs with memory efficiency for large memory job.
@@ -265,7 +265,6 @@ specify them in order to submit jobs to them.
 How to submit jobs to USDF
 --------------------------
 
-
   * Only request memory and let PanDA do the scheduling(do not define *queue*).
     Here is an example::
 
@@ -296,7 +295,6 @@ How to submit jobs to USDF
                # *queue, but the requestMemory is still 2048*
                requestMemory: 4000
                queue: "SLAC_Rubin_Merge"
-
 
 Users authentication
 --------------------
