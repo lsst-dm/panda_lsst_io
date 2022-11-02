@@ -707,7 +707,7 @@ Make sure you have butler db-auth.yaml in your $HOME area. The content of it is
 something like(It's USDF butler. You need to change it to FrDF butler.): ::
 
    $> cat ${HOME}/.lsst/db-auth.yaml
-   - url: postgresql://usdf-butler.slac.stanford.edu:5432/lsstdb1
+   - url: postgresql://<frdf-butler>:5432/<butler-db>
    username: rubin
    password: *********************************************************
 
