@@ -43,7 +43,7 @@ Here are the content of LSST_LOCAL_PROLOG and corresponding descriptions.
 - lsst accounts::
   # accounts to access google realtime logging service, required by pilots to send realtime logs.
   export GOOGLE_APPLICATION_CREDENTIALS=/sdf/home/l/lsstsvc1/.lsst/gcs-access.json
-  
+
   # butler db accounts
   export LSST_DB_AUTH=/sdf/home/l/lsstsvc1/.lsst/db-auth.yaml
 
@@ -68,7 +68,7 @@ Here are the content of LSST_LOCAL_PROLOG and corresponding descriptions.
   # A temporary directory to store qgraph files, the execution butler and a few other scripts.
   # During 'bps submit', the qgraph files, the execution butler (a sqlite file) and a few other
   # scripts will be created and stored in this directory. These files will be accessed by pipeline jobs.
-  # It should be a share directory or a Grid/Cloud directory which can be accessed by all worker nodes. 
+  # It should be a share directory or a Grid/Cloud directory which can be accessed by all worker nodes.
   export LSST_RUN_TEMP_SPACE="file:///sdf/group/rubin/sandbox/"
 
 
@@ -102,15 +102,15 @@ Here is an example of LSST_LOCAL_PROLOG. It's the configuration for USDF::
   # lsst accounts
   # accounts to access google realtime logging service, required by pilots to send realtime logs.
   export GOOGLE_APPLICATION_CREDENTIALS=/sdf/home/l/lsstsvc1/.lsst/gcs-access.json
-  
+
   # butler db accounts
   export LSST_DB_AUTH=/sdf/home/l/lsstsvc1/.lsst/db-auth.yaml
-  
+
   # account to access SLAC objectstore, it’s not required for other sites if there are no objectstores.
   export AWS_SHARED_CREDENTIALS_FILE=/sdf/home/l/lsstsvc1/.lsst/aws-credentials.ini
 
   # SLAC temp directory, it’s not required for other sites if the default /tmp works ok
-  # (The default /tmp directory should be big enough because PanDA and butler will put 
+  # (The default /tmp directory should be big enough because PanDA and butler will put
   # some temp files in the /tmp directory. It’s good to make sure that 2~4 GB per CPU cores).
   export TMPDIR=/lscratch/lsstsvc1/pilot_temp/
   mkdir -p $TMPDIR
@@ -118,7 +118,7 @@ Here is an example of LSST_LOCAL_PROLOG. It's the configuration for USDF::
   # set butlerConfig and fileDistributionEndpoint
   # export DAF_BUTLER_REPOSITORY_INDEX="s3://butler-us-central1-panda-dev/dc2/butler-external.yaml"
   export DAF_BUTLER_REPOSITORY_INDEX="/sdf/group/rubin/shared/data-repos.yaml"
-  
+
   # A temporary directory to store qgraph files, the execution butler and a few other scripts.
   # During `bps submit`, the qgraph files, the execution butler (a sqlite file) and a few other
   # scripts will be created and stored in this directory. These files will be accessed by pipeline
