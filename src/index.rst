@@ -1,9 +1,12 @@
+
 This guide describes basic operations for running Rubin workflow with
 PanDA on the Google Cloud deployment prepared for the DP0.2 exercise.
 This setup continuously evolves, this is why the current manual may not
 always precisely reflect the transitional state. In case of founding any
 discrepancies please inform the authors using provided Support Channels.
 
+
+`Administrator guide <#administrator-guide>`__
 `Setup overview <#setup-overview>`__
 
    `GKE queues <#gke-queues>`__
@@ -50,6 +53,15 @@ discrepancies please inform the authors using provided Support Channels.
    `Workflow cancel/retry <#workflow-cancelretry>`__
 
 `Support channels <#support-channels>`__
+
+Administrator guide
+===================
+Here are documents for administrators
+
+.. toctree::
+   :maxdepth: 1
+
+   admin/site_environments
 
 Setup overview
 ==============
