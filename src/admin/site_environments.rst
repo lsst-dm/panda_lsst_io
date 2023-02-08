@@ -51,12 +51,15 @@ Here are the content of LSST_LOCAL_PROLOG and corresponding descriptions.
 - lsst accounts:
 
   Accounts to access google realtime logging service, required by pilots to send realtime logs::
+
     export GOOGLE_APPLICATION_CREDENTIALS=/sdf/home/l/lsstsvc1/.lsst/gcs-access.json
 
   Butler db accounts::
+
     export LSST_DB_AUTH=/sdf/home/l/lsstsvc1/.lsst/db-auth.yaml
 
   Account to access SLAC objectstore, it’s not required for other sites if there are no objectstores::
+
     # export AWS_SHARED_CREDENTIALS_FILE=/sdf/home/l/lsstsvc1/.lsst/aws-credentials.ini
 
 - temp directory:
