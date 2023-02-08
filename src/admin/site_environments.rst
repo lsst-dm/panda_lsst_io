@@ -21,28 +21,32 @@ Here are the content of LSST_LOCAL_PROLOG and corresponding descriptions.
 - Timezone:
 
   To set the timezone, it's good for logging format for jobs from different sites::
-  export TZ=UTC
+
+    export TZ=UTC
 
 - Realtime logging:
 
   Environments required for realtime logging::
-  # set USE_REALTIME_LOGGING to no if no realtime logging.
-  export REALTIME_LOGGING_SERVER=google-cloud-logging
-  export REALTIME_LOGNAME=Panda-RubinLog
-  export REALTIME_LOGFILES=payload-log.json
-  export USE_REALTIME_LOGGING=yes
+
+    # set USE_REALTIME_LOGGING to no if no realtime logging.
+    export REALTIME_LOGGING_SERVER=google-cloud-logging
+    export REALTIME_LOGNAME=Panda-RubinLog
+    export REALTIME_LOGFILES=payload-log.json
+    export USE_REALTIME_LOGGING=yes
 
 - voms and x509 certificates:
 
   Setup voms-proxy-info and x509 CA certificates (/etc/grid-security/certificates by default).
   Setup osg for SLAC here (or setup lcg clients here for other sites).
   For EU sites, some lcg libraries are already installed locally. So this line can be ignored::
+
     # source /cvmfs/oasis.opensciencegrid.org/mis/osg-wn-client/current/el8-x86_64/setup.sh
 
 - group permission for new directories:
 
   It’s used for setting the permissions of some sub-directories in the job::
-  umask 007
+
+    umask 007
 
 - lsst accounts:
 
@@ -60,6 +64,7 @@ Here are the content of LSST_LOCAL_PROLOG and corresponding descriptions.
   SLAC temp directory, it’s not required for other sites if the default /tmp works ok
   (The default /tmp directory should be big enough because PanDA and butler will put
   some temp files in the /tmp directory. It’s good to make sure that 2~4 GB per CPU cores)::
+
     export TMPDIR=/lscratch/lsstsvc1/pilot_temp/
     mkdir -p $TMPDIR
 
@@ -67,6 +72,7 @@ Here are the content of LSST_LOCAL_PROLOG and corresponding descriptions.
 
   The location of the butler configuration files.
   It can be a posix file or s3 objectstore file::
+
     # export DAF_BUTLER_REPOSITORY_INDEX="s3://butler-us-central1-panda-dev/dc2/butler-external.yaml"
     # export RUBIN_RUN_TEMP_SPACE="s3://butler-us-central1-panda-dev/"
     export DAF_BUTLER_REPOSITORY_INDEX="/sdf/group/rubin/shared/data-repos.yaml"
@@ -77,6 +83,7 @@ Here are the content of LSST_LOCAL_PROLOG and corresponding descriptions.
   During 'bps submit', the qgraph files, the execution butler (a sqlite file) and a few other
   scripts will be created and stored in this directory. These files will be accessed by pipeline jobs.
   It should be a share directory or a Grid/Cloud directory which can be accessed by all worker nodes::
+
     export LSST_RUN_TEMP_SPACE="file:///sdf/group/rubin/sandbox/"
 
 
