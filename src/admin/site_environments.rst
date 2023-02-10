@@ -1,7 +1,12 @@
 Site Environments
 =================
 
-The site environments required for running PanDA jobs.
+At many sites multiple experiments share the computing resource. Thus experiment specific settings
+should not be set globally. Instead, these settings can be put in a file that will be sourced by
+the PanDA pilot as well as the user.
+
+For Rubin, we defined a global parameter LSST_LOCAL_PROLOG to link the experiment specific file.
+The next section will describe the content of the file.
 
 Export LSST_LOCAL_PROLOG
 ------------------------
