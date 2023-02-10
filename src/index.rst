@@ -2,8 +2,8 @@
 This guide describes basic operations for running Rubin workflow with
 PanDA on the Google Cloud deployment prepared for the DP0.2 exercise.
 This setup continuously evolves, this is why the current manual may not
-always precisely reflect the transitional state. In case of founding any
-discrepancies please inform the authors using provided Support Channels.
+always precisely reflect the transitional state. If any discrepancy is found,
+please inform the authors using provided Support Channels.
 
 
 `Administrator guide <#administrator-guide>`__
