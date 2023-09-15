@@ -564,40 +564,48 @@ To double check you are on the S3DF cluster, you should see sdfrome###
 Download the enviroment setup script and an example bps yaml from the
 ctrl_bps_panda repository: ::
 
-   $> wget https://raw.githubusercontent.com/lsst/ctrl_bps_panda/main/python/lsst/ctrl/bps/panda/conf_example/setup_panda.sh
+   $> wget https://raw.githubusercontent.com/lsst/ctrl_bps_panda/main/python/lsst/ctrl/bps/panda/conf_example/setup_lsst_panda.sh
    $> wget https://raw.githubusercontent.com/lsst/ctrl_bps_panda/main/python/lsst/ctrl/bps/panda/conf_example/test_usdf.yaml
 
 If you have already set up the enviroment for a release of the Rubin
 software distribution ( since w_2022_41 ), you can also copy these two
 files from $CTRL_BPS_PANDA_DIR: ::
 
-   $> cp $CTRL_BPS_PANDA_DIR/python/lsst/ctrl/bps/panda/conf_example/setup_panda.sh .
+   $> cp $CTRL_BPS_PANDA_DIR/python/lsst/ctrl/bps/panda/conf_example/setup_lsst_panda.sh .
    $> cp $CTRL_BPS_PANDA_DIR/python/lsst/ctrl/bps/panda/conf_example/test_usdf.yaml .
 
-setup_panda.sh sets up the PanDA and Rubin environment. ::
+setup_lsst_panda.sh sets up the PanDA and Rubin environment. ::
 
-   $> cat setup_panda.sh
-   #!/bin/bash
-   # To setup PanDA: source setup_panda.sh w_2022_32
-   # If using SDF: source setup_panda.sh w_2022_32 sdf
+   $> cat setup_lsst_panda.sh
+   # To setup PanDA at USDF: source setup_lsst_panda.sh w_2023_38
+   # If using PanDA at CERN: source setup_lsst_panda.sh w_2023_38 cern
 
    latest=$(ls -td /cvmfs/sw.lsst.eu/linux-x86_64/panda_env/v* | head -1)
 
-   usdf_cluster=$2
-   if [ "$usdf_cluster" == "sdf" ]; then
-      setupScript=${latest}/setup_panda.sh
-      echo "Working on cluster: " $usdf_cluster
+   weekly=$1
+   panda_ins=$2
+
+   if [ "$panda_ins" == "cern" ]; then
+     setupScript=${latest}/setup_panda_cern.sh
+     echo "Submission to PanDA at: " $panda_ins
    else
-      setupScript=${latest}/setup_panda_s3df.sh
+     setupScript=${latest}/setup_panda_usdf.sh
    fi
+
+   source ${latest}/setup_lsst.sh $weekly
    echo "setup from:" $setupScript
+   source $setupScript
 
-   source $setupScript $1
-
-Choose the lsst_distrib version e.g. w_2022_32, then set up the PanDA
+N.B. the PanDA setup script must be sourced after the lsst stack one.
+Choose the lsst_distrib version e.g. w_2023_38, then set up the PanDA
 and the Rubin software with: ::
 
-   $> source setup_panda.sh w_2022_32
+   $> source setup_lsst_panda.sh w_2023_38
+
+This is to use the PanDA system deployed at SLAC k8s by default. If you
+want to use the PanDA system at CERN, please specify: ::
+
+   $> source setup_lsst_panda.sh w_2023_38 cern
 
 Change *LSST_VERSION* in the example yaml to what you choose: ::
 
@@ -605,7 +613,7 @@ Change *LSST_VERSION* in the example yaml to what you choose: ::
    # An example bps submission yaml
    # Need to setup USDF before submitting the yaml
 
-   LSST_VERSION: w_2022_32
+   LSST_VERSION: w_2023_38
 
    includeConfigs:
    - ${CTRL_BPS_PANDA_DIR}/config/bps_usdf.yaml
@@ -630,67 +638,19 @@ You are ready to submit the workflow now: ::
 Write down the "Run Id" on the submission screen. It is the request ID
 to use on the PanDA monitor.
 
-How to submit a workflow from the interim cluster SDF
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-To use the SDF cluster, login to rubin-devl.slac.stanford.edu ( note
-the full postfix ) from the jump nodes. You should see rubin-devl in
-your shell prompt.
-
-Get an example bps yaml from the ctrl_bps_panda repository: ::
-
-   wget https://raw.githubusercontent.com/lsst/ctrl_bps_panda/main/python/lsst/ctrl/bps/panda/conf_example/test_sdf.yaml
-
-or copy it from $CTRL_BPS_PANDA_DIR: ::
-
-   $> cp $CTRL_BPS_PANDA_DIR/python/lsst/ctrl/bps/panda/conf_example/test_sdf.yaml .
-
-The difference in this yaml file is that it specifies the PanDA queue and
-request different memory for executionButler. Choose the lsst_distrib version
-e.g. w_2022_32, then set up the PanDA and the Rubin software with: ::
-
-   $> source setup_panda.sh w_2022_32 sdf
-
-Change *LSST_VERSION* in the example yaml accordingly: ::
-
-   $> cat test_sdf.yaml
-   # An example bps submission yaml
-   # Need to setup USDF before submitting the yaml
-
-   LSST_VERSION: w_2022_32
-
-   includeConfigs:
-   - ${CTRL_BPS_PANDA_DIR}/config/bps_usdf.yaml
-
-   queue: "SLAC_Rubin_SDF"
-
-   executionButler:
-     requestMemory: 4000
-     queue: "SLAC_Rubin_SDF_Big"
-
-   pipelineYaml: "${DRP_PIPE_DIR}/pipelines/HSC/DRP-RC2.yaml#isr"
-
-   payload:
-     payloadName: testUSDF_sdf
-     inCollection: "HSC/RC2/defaults"
-     dataQuery: "exposure = 34342 AND detector = 10"
-
-Now ready to submit the workflow: ::
-
-   $> bps submit test_sdf.yaml
-
 Submit a workflow to USDF (Developer)
 -------------------------------------
 
 For developer to submit a workflow to S3DF with local software in addition to an LSST stack, please at first check `Submit a workflow to USDF`_.
 Here we only list the differences.
 
-Copy the environment setup script from cvmfs to your local directory and update the lsst setup part to your private repo: ::
+Copy the stack environment setup script from cvmfs to your local directory and update the lsst setup part to your private repo: ::
 
    $> latest=$(ls -td /cvmfs/sw.lsst.eu/linux-x86_64/panda_env/v* | head -1)
-   $> cp $latest/setup_panda_s3df.sh /local/directory/
-   $> <update /local/directory/setup_panda_s3df.sh>
-   $> source /local/directory/setup_panda_s3df.sh
+   $> cp $latest/setup_lsst.sh /local/directory/
+   $> <update /local/directory/setup_lsst.sh>
+   $> source /local/directory/setup_lsst.sh
+   $> source $latest/setup_panda_usdf.sh (or setup_panda_cern.sh if using PanDA at CERN)
 
 ``Note``: Make sure PanDA can read your private repo: ::
 
@@ -703,7 +663,7 @@ For the submission yaml file ``test_usdf.yaml``, you need to change the ``setupL
    # Need to setup USDF before submitting the yaml
    # source setupUSDF.sh
 
-   LSST_VERSION: w_2022_32
+   LSST_VERSION: w_2023_38
 
    includeConfigs:
    - ${CTRL_BPS_PANDA_DIR}/config/bps_usdf.yaml
@@ -743,7 +703,8 @@ node id to be processed by a particular job.
 The primary monitoring tool used with the test PanDA setup is available
 on this address::
 
-    https://panda-doma.cern.ch/
+    https://panda-doma.cern.ch/   (CERN PanDA)
+    https://usdf-panda-bigmon.slac.stanford.edu:8443  (USDF PanDA)
 
 First-time access may require adding this site to the secure exception
 list, this happens because the site SSL certificate has been signed by
@@ -756,7 +717,8 @@ Workflow progress
 
 The workflow summary is available on this address::
 
-    https://panda-doma.cern.ch/idds/wfprogress/ .
+    https://panda-doma.cern.ch/idds/wfprogress (CERN PanDA)
+    https://usdf-panda-bigmon.slac.stanford.edu:8443/idds/wfprogress (USDF PANDA)
 
 (Follow instructions on
 https://cafiles.cern.ch/cafiles/certificates/list.aspx?ca=grid and
