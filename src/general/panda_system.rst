@@ -1,5 +1,10 @@
+PanDA system
+============
+
+A general overview of the PanDA system.
+
 PanDA
-=================
+-----
 
 Details see 'PanDA <https://panda-wms.readthedocs.io>'.
 
@@ -11,7 +16,7 @@ different resource providers(Grid, Cloud, k8s, HPC and so on), It hides the dive
 providers from users.
 
 iDDS
-=================
+----
 
 Details see 'iDDS <https://idds.readthedocs.io>'.
 
@@ -22,44 +27,34 @@ Condition workflow and Loop workflow management, and asynchronous result deliver
 
 
 .. image:: ../_images/panda_idds.png
- :width: 5.30895in
- :height: 4.46667in
+ :width: 7.30895in
+ :height: 4.06667in
 
 
 PanDA-iDDS components
-=======================
+---------------------
+
+A general overview of the PanDA components.
 
 .. image:: ../_images/panda_components.png
  :width: 5.30895in
  :height: 4.46667in
 
-PanDA
---------------------------------
-PanDA is the workload manager. It manages/schedules tasks and jobs.
-It includes panda-server (job management), panda-JEDI (task management)
-and panda-database (postgresql for LSST).
+- **PanDA**. PanDA is the workload manager. It manages/schedules tasks and jobs.
+  It includes panda-server (job management), panda-JEDI (task management)
+  and panda-database (postgresql for LSST).
 
-iDDS
---------
-iDDS is the workflow manager. It manages the dependencies of tasks and jobs.
-It includes the Restful service, the daemon agents and the database (postgresql for LSST).
+- **iDDS**. iDDS is the workflow manager. It manages the dependencies of tasks and jobs.
+  It includes the Restful service, the daemon agents and the database (postgresql for LSST).
 
-Harvester
----------
-It's the resource facing service to submit jobs to Grid/Cloud. It submittes jobs to CEs,
-such as Cloud, CondorCE, ARC-CE and others. It includes the Harvester service and a Mariadb.
+- **Harvester**. It's the resource facing service to submit jobs to Grid/Cloud. It submittes jobs to CEs,
+  such as Cloud, CondorCE, ARC-CE and others. It includes the Harvester service and a Mariadb.
 
-Pilot
-------
-The pilot runs as an agent at remote worker nodes to manage the user payload execution.
+- **Pilot**. The pilot runs as an agent at remote worker nodes to manage the user payload execution.
 
-Monitors
---------
-The main monitor is a PanDA monitor. It can also be integrated with Grafana, ElasticSearch.
+- **Monitors**. The main monitor is a PanDA monitor. It can also be integrated with Grafana, ElasticSearch.
 
-Messaging
----------
-The system employs a messaging service, for example ActiveMQ, to communicate between each other.
+- **Messaging**. The system employs a messaging service, for example ActiveMQ, to communicate between each other.
 
 Authentication/Authorization
 ----------------------------
@@ -67,12 +62,12 @@ The system supports both X509 and OIDC (with Indigo IAM) for authentication and 
 
 
 PanDA modes
-===========
+-----------
 
 The PanDA system supports ``pull`` mode and ``push`` mode.
 
 PULL
-----
+~~~~
 
 In the ``pull`` mode, at first the Harvester sends a few pilots before any jobs to make sure
 that the system is ready for jobs. The harvester checks the number of jobs in PanDA to decide
@@ -113,12 +108,12 @@ The ``pull`` mode:
   PanDA starts to boost to submit more pilots.
 
 .. image:: ../_images/panda_pull.png
- :width: 5.30895in
- :height: 4.46667in
+ :width: 4.30895in
+ :height: 3.46667in
 
 
 PUSH
------
+~~~~
 
 In the ``push`` mode, the Harvester fetches the user payload at first and parses the resource requirement
 of the user payload. Then it submitts a pilot with the special user's resource requirements, attached
@@ -144,5 +139,5 @@ The ``push`` mode:
   the requestMemory 20GB.
 
 .. image:: ../_images/panda_push.png
- :width: 5.30895in
- :height: 4.46667in
+ :width: 4.30895in
+ :height: 3.46667in
