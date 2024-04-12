@@ -26,10 +26,10 @@ To submit a workflow to PanDA system, here are several general notes:
 
 
 Setup environment
-=================
+-----------------
 
 Setup environment with CVMFS
-----------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The submit workflows from USDF, FrDF and UKDF, the CVMFS is available. Users can use
 CVMFS to setup the environments::
@@ -44,7 +44,7 @@ For LSST stack verion older than w_2024_14, this line below is required for remo
   source $latest/setup_bps.sh
 
 Setup environment on IDF
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 The Rubin Science Platform (RSP) can be accessed from the JupyterLab
 notebook configured for the IDF at: ::
@@ -66,10 +66,11 @@ Users only need to run this command below after login to data-int.lsst.cloud or 
 
     setup lsst_distrib
 
-** IDF can only run remote submission currently, to submit workflows to USDF, FrDF or UKDF.**
+**IDF can only run remote submission currently, to submit workflows to USDF, FrDF or UKDF.**
 
 Ping PanDA Service
-------------------
+~~~~~~~~~~~~~~~~~~
+
 After setting up the environment, users can try to ping PanDA service to make sure the settings are ok.
 
 If the BPS_WMS_SERVICE_CLASS is not set, set it through::
@@ -82,10 +83,10 @@ Ping the PanDA system to check whether the service is ok::
 
 
 Prepare YAML configuration
-==========================
+--------------------------
 
 YAML configuration
-------------------
+~~~~~~~~~~~~~~~~~~
 
 As any other Rubin workflow submitted with BPS commands, PanDA based
 data processing requires a YAML configuration file. The YAML settings,
@@ -147,7 +148,8 @@ After implementing lazy variables there is not container release
 specific variables in the YAML file.
 
 Site&Memory requirements in YAML files
----------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
   * Only request memory and let PanDA do the scheduling(do not define *queue*).
     Here is an example::
 
@@ -181,7 +183,7 @@ Site&Memory requirements in YAML files
 
 
 Example YAML configuration for local submission
------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 An example YAML file for local submission can be found in github or in the LSST stack::
   https://raw.githubusercontent.com/lsst/ctrl_bps_panda/main/python/lsst/ctrl/bps/panda/conf_example/test_usdf.yaml
@@ -213,7 +215,7 @@ Here is an example for local submission::
 
 
 Example YAML configuration for remote submission
--------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Here is an example for remote submission::
 
@@ -244,7 +246,7 @@ Here is an example for remote submission::
 
 
 Butler configuration
-====================
+--------------------
 
 Make sure you have db-auth.yaml in your $HOME area. The content of it is
 something like: ::
@@ -256,10 +258,10 @@ something like: ::
 
 
 Submit a workflow
-=================
+-----------------
 
 Local submission
-----------------
+~~~~~~~~~~~~~~~~
 
 For the first time PanDA uses the higher-level butler directories (e.g., first PanDA run for u/<your_operator_name>). If permissions are not set right, the pipetaskInit job will die with a ``Failed to execute payload:[Errno 13] Permission denied: '/sdf/group/rubin/repo/main/<output collection>'`` message.
 Note: one cannot pre-test permissions by manually running pipetask as the PanDA job is executed as a special user.
@@ -273,7 +275,7 @@ Here is the command to submit a local workflow::
 
 
 Remote submission
------------------
+~~~~~~~~~~~~~~~~~
 
 Here are example commands to submit workflows to remote sites::
 
@@ -283,7 +285,7 @@ Here are example commands to submit workflows to remote sites::
 
 
 Submit a workflow (Developers)
-==============================
+------------------------------
 
 Developers may have private lsst stack environment. Here are instructions for developers.
 

@@ -1,5 +1,7 @@
-PanDA Dev @ USDF
-================
+Dev: PanDA @ USDF
+=================
+
+**Here are instructions only for developers to deploy PanDA @ USDF**.
 
 The PanDA k8s deployment includes these components below. The PanDA system is deployed to USDF k8s cluster
 through ``helm``. In this chapter, the details about how to deploy the PanDA dev system at USDF are described.

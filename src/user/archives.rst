@@ -1,12 +1,12 @@
 Archives
-===============
+========
 
-Here are just backup information for retired setups
+Here are just backup information for retired resources.
 
 
 
 IDF
-==============
+---
 
 A PanDA setup for the Rubin DP0.2 exercise consists of several
 components including a test PanDA server instance located at CERN, two
@@ -23,7 +23,7 @@ setup (Fig. 1) facing end users.
 Fig 1. System component diagram
 
 GKE queues
-----------
+~~~~~~~~~~
 
 There are 7 production queues pre configured in the IDF GKE in order to match particular job requirements:
 
@@ -74,7 +74,7 @@ type.
 
 
 SDF
-=====
+---
 
 Here are queues for the ``SDF`` cluster. These queues are brokeroff. Users need to
 specify them in order to submit jobs to them.

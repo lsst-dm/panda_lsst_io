@@ -37,10 +37,10 @@ Here are documents for administrators
    :maxdepth: 1
 
    admin/panda_k8s_usdf
-   admin/panda_k8s_usdf_dev
    admin/site_environments
    admin/management_instructions
    admin/boost_memory
+   admin/panda_k8s_usdf_dev
 
 Support
 =======

@@ -89,5 +89,7 @@ and uptimes and as such should not be used for regular runs
 
 
 For **SLAC_Rubin_Extra_Himem** and **SLAC_Rubin_merge**, the maxRSS is 500 GB based on the site settings.
+
 For **LANCS_Rubin_Extra_Himem** and **LANCS_Rubin_merge**, the maxRSS is 192 GB based on the site settings.
+
 For **CC-IN2P3_Rubin_Extra_Himem** and **CC-IN2P3_Rubin_merge**, the maxRSS is unknown currently.

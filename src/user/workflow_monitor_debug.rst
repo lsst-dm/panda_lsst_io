@@ -205,10 +205,10 @@ Prmon logs are also available in the textual form. Correspondent links
 are available in the “Logs” block of the menu.
 
 How to debug a workflow
-=======================
+-----------------------
 
 Workflow points of inspection
------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Different metrics could be inspected to check workflow progress and
 identify possible issues. There are few of them::
@@ -226,7 +226,7 @@ identify possible issues. There are few of them::
   https://usdf-panda-bigmon.slac.stanford.edu:8443/jobs/?jeditaskid=\ <task>&jobstatus=failed
 
 Workflow cancel/retry
----------------------
+~~~~~~~~~~~~~~~~~~~~~
 
 If the BPS_WMS_SERVICE_CLASS is not set, set it through::
 
