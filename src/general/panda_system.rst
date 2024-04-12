@@ -28,7 +28,7 @@ Condition workflow and Loop workflow management, and asynchronous result deliver
 
 .. image:: ../_images/panda_idds.png
  :width: 7.30895in
- :height: 4.06667in
+ :height: 3.46667in
 
 
 PanDA-iDDS components
@@ -55,6 +55,8 @@ A general overview of the PanDA components.
 - **Monitors**. The main monitor is a PanDA monitor. It can also be integrated with Grafana, ElasticSearch.
 
 - **Messaging**. The system employs a messaging service, for example ActiveMQ, to communicate between each other.
+
+- **Indigo IAM**. The Indigo IAM is employed to manage OIDC based authentication and authorization operations.
 
 Authentication/Authorization
 ----------------------------
