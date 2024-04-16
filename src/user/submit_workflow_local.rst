@@ -1,11 +1,11 @@
-.. How to submit a workflow (locally or developer)
+.. _submit_workflow_locally:
 
 How to submit a workflow (locally or developer)
 ===============================================
 
 **Here are instructions how to submit a PanDA workflow to local sites**.
 
-**To submit a workflow remotely, please check :ref:`How to submit a workflow (remotely)`**
+**To submit a workflow remotely, please check** :ref:`submit_workflow_remotely`.
 
 To submit a workflow to PanDA system, here are several general notes:
 
@@ -57,7 +57,7 @@ Ping the PanDA system to check whether the service is ok::
    $> bps ping
 
 **In this step, it will look for tokens for authorization. If you don't have a token or you are not registered yet,
-please check :ref:`User authentication`.**
+please check** :ref:`user_authentication`.
 
 Prepare YAML configuration
 --------------------------

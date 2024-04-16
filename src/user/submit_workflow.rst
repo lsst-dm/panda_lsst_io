@@ -1,11 +1,11 @@
-.. How to submit a workflow (remotely)
+.. _submit_workflow_remotely:
 
 How to submit a workflow (remotely)
 ===================================
 
 **Here are instructions how to submit a PanDA workflow to remote sites**.
 
-**To submit a workflow locally, please check :ref:`How to submit a workflow (locally or developer)`**
+**To submit a workflow locally, please check** :ref:`submit_workflow_locally`.
 
 To submit a workflow to PanDA system, here are several general notes:
 
