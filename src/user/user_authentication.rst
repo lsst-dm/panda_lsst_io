@@ -1,10 +1,37 @@
-Users authentication
+.. User authentication
+
+User authentication
 ======================
 
 PanDA services support both x509 and OIDC JWT (Json Web Token) based
 authentications. For the Rubin experiment, the OIDC JWT based authentidation
 method is enabled. It uses the IAM service to generate and valid user
 tokens.
+
+In the PanDA system, the token is similar to an ID card or visa. Every time when
+accessing a PanDA service (PanDA Http service), the token will be attached together
+with the user data to be sent to the Http service. The Http service will verify
+the token to get the user information and authorize users.
+
+- **User Registration**. To access the IAM system, users need to be registered into
+  the IAM system.
+
+- **Token Generation**. When trying to access a PanDA system, PanDA client will try
+  to find a valid token. If there is no token available, PanDA will try the function
+  to generate a token. In this step, users will be redirected to approve/sign the token.
+  When a token is generated, it means the user has got an ID card to access
+  the PanDA service.
+
+- **Access PanDA**. When using PanDA client or bps client to access the PanDA service,
+  PanDA will ask the users to show the token (PanDA client automatically checks and attach
+  the token). The PanDA service will authorize users based on information in the token.
+
+- **PanDA IAM service**. The IAM service is used to sign the tokens. One PanDA system can
+  support multiple IAM services to sign the tokens. The USDF PanDA can use the *DOMA PanDA IAM*
+  or *USDF PanDA IAM* (not available yet) to sign the tokens. The IAM service is similar
+  to an ID card issuer office. When using the *DOMA PanDA IAM* to generate tokens for
+  the USDF PanDA, it only means that the token is signed by the *DOMA PanDA IAM*. It doesn't
+  mean you are logining to the DOMA PanDA server.
 
 IAM user registration
 ----------------------
@@ -57,3 +84,23 @@ and its used for future submissions unless the timeout has expired.
 
 **A valid token is required for all PanDA services. If there is no valid
 token, the *IAM user authentication* step will be triggered.**
+
+
+Authorization between IAM and the labs
+--------------------------------------
+
+**This part is for admins or for users who want to understand some logics behind IAM.
+You can ignore this part.**
+
+**This part is about the communication between services.**
+
+IAM service needs the labs to authorize the IAM to sign the tokens for users in a lab.
+For example, if IAM wants to sign a token for a user in Rubin Dex (https://dex.slac.stanford.edu/auth),
+the IAM service at first needs to register in Rubin Dex and get approvals (with security information).
+Then the IAM can sign tokens for users in Rubin Dex.
+
+The IAM service needs to sign tokens for users from different labs or institutes. Does it mean
+that the IAM service needs to get approvals from all these labs or institutes? Here we use CILogon.
+CILogon is a service that many labs or institues have already approved for OIDC tokens. The PanDA
+IAM just needs to get approvals from the CILogon. Then PanDA IAM will be able to sign tokens for
+users in these labs or institutes.

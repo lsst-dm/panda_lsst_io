@@ -26,6 +26,7 @@ Here are documents for users to submit jobs to PanDA system
    user/user_authentication
    user/data_facilities_and_queues
    user/submit_workflow
+   user/submit_workflow_local
    user/workflow_monitor_debug
    user/archives
 

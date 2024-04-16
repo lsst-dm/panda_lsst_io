@@ -1,5 +1,11 @@
-How to submit a workflow
-========================
+.. How to submit a workflow (remotely)
+
+How to submit a workflow (remotely)
+===================================
+
+**Here are instructions how to submit a PanDA workflow to remote sites**.
+
+**To submit a workflow locally, please check :ref:`How to submit a workflow (locally or developer)`**
 
 To submit a workflow to PanDA system, here are several general notes:
 
@@ -9,13 +15,8 @@ To submit a workflow to PanDA system, here are several general notes:
 
 - **YAML configuration**. The YAML configuration for BPS submission.
 
-- **butler configuration**. Optional. For special jobs with different
-  butler configuration, users need to use correct butler.
-
-- **local submission**. For the local submission, BPS will create Quantum Graph
-  files locally at first and then submit the workflow to the PanDA system. In
-  this case, users need to make sure that the PanDA jobs can access the Quantum
-  Graph directory with correct permission.
+- **butler configuration**. For remote submission, users don't need to configure
+  butler. The site admin will configure it for you.
 
 - **remote submission**. In the remote submission, the YAML configuration files
   will be transfered to remote sites (Even the submission is from USDF to USDF is
@@ -81,6 +82,8 @@ Ping the PanDA system to check whether the service is ok::
 
    $> bps ping
 
+**In this step, it will look for tokens for authorization. If you don't have a token or you are not registered yet,
+please check :ref:`User authentication`.**
 
 Prepare YAML configuration
 --------------------------
@@ -181,39 +184,6 @@ Site&Memory requirements in YAML files
                requestMemory: 4000
                queue: "SLAC_Rubin_Merge"
 
-
-Example YAML configuration for local submission
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-An example YAML file for local submission can be found in github or in the LSST stack::
-  https://raw.githubusercontent.com/lsst/ctrl_bps_panda/main/python/lsst/ctrl/bps/panda/conf_example/test_usdf.yaml
-  $CTRL_BPS_PANDA_DIR/python/lsst/ctrl/bps/panda/conf_example/test_usdf.yaml
-
-Here is an example for local submission::
-
-    LSST_VERSION: w_2024_14
-
-    includeConfigs:
-      - ${CTRL_BPS_PANDA_DIR}/config/bps_usdf.yaml
-      # - ${CTRL_BPS_PANDA_DIR}/config/bps_frdf.yaml  # To submit workflows to FrDF
-      # - ${CTRL_BPS_PANDA_DIR}/config/bps_ukdf.yaml  # To submit workflows to UKDF
-
-    pipelineYaml: "${DRP_PIPE_DIR}/pipelines/LSSTCam-imSim/DRP-test-med-1.yaml#isr"
-    # pipelineYaml: "${DRP_PIPE_DIR}/pipelines/LSSTCam-imSim/DRP-test-med-1.yaml#step1"
-
-    computeSite: SLAC
-    requestMemory: 4000
-    memoryMultiplier: 1.2
-
-    payload:
-      payloadName: test_DF_{computeSite}
-      inCollection: "2.2i/defaults"
-      # dataQuery: "instrument='LSSTCam-imSim' and skymap='DC2' and exposure in (214433) and detector=10"
-      dataQuery: "instrument='LSSTCam-imSim' and skymap='DC2' and exposure in (214433)"
-      # butlerConfig: panda-test-med-1        # butler configuration for FrDF and UKDF
-      butlerConfig: /repo/dc2                 # butler configuration for USDF
-
-
 Example YAML configuration for remote submission
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -244,35 +214,8 @@ Here is an example for remote submission::
       # butlerConfig: panda-test-med-1        # butler configuration for FrDF and UKDF
       butlerConfig: /repo/dc2                 # butler configuration for USDF
 
-
-Butler configuration
---------------------
-
-Make sure you have db-auth.yaml in your $HOME area. The content of it is
-something like: ::
-
-   $> cat ${HOME}/.lsst/db-auth.yaml
-   - url: postgresql://usdf-butler.slac.stanford.edu:5432/lsstdb1
-   username: rubin
-   password: *********************************************************
-
-
 Submit a workflow
 -----------------
-
-Local submission
-~~~~~~~~~~~~~~~~
-
-For the first time PanDA uses the higher-level butler directories (e.g., first PanDA run for u/<your_operator_name>). If permissions are not set right, the pipetaskInit job will die with a ``Failed to execute payload:[Errno 13] Permission denied: '/sdf/group/rubin/repo/main/<output collection>'`` message.
-Note: one cannot pre-test permissions by manually running pipetask as the PanDA job is executed as a special user.
-In this case, you need to grant group permission for PanDA to access the butler directory.::
-
-   $> chmod -R g+rws /sdf/group/rubin/repo/main/u/<your_operator_name>
-
-Here is the command to submit a local workflow::
-
-    bps submit test_local.yaml
-
 
 Remote submission
 ~~~~~~~~~~~~~~~~~
@@ -282,52 +225,3 @@ Here are example commands to submit workflows to remote sites::
     bps submit --compute-site SLAC test_remote.yaml
     bps submit --compute-site CC-IN2P3 test_remote.yaml
     bps submit --compute-site Lancs test_remote.yaml
-
-
-Submit a workflow (Developers)
-------------------------------
-
-Developers may have private lsst stack environment. Here are instructions for developers.
-
-Copy the stack environment setup script from cvmfs to your local directory and update the lsst setup part to your private repo: ::
-
-   $> latest=$(ls -td /cvmfs/sw.lsst.eu/linux-x86_64/panda_env/v* | head -1)
-   $> cp $latest/setup_lsst.sh /local/directory/
-   $> <update /local/directory/setup_lsst.sh>
-   $> source /local/directory/setup_lsst.sh
-   $> source $latest/setup_panda_usdf.sh (or setup_panda_cern.sh if using PanDA at CERN)
-
-``Note``: Make sure PanDA can read your private repo: ::
-
-   $> chmod -R g+rxs <your private development repo>
-
-Here is an example for local submission for developer, with customizing ``setupLSSTEnv`` to point to your private development repo: ::
-
-    LSST_VERSION: w_2024_14
-
-    includeConfigs:
-      - ${CTRL_BPS_PANDA_DIR}/config/bps_usdf.yaml
-      # - ${CTRL_BPS_PANDA_DIR}/config/bps_frdf.yaml  # To submit workflows to FrDF
-      # - ${CTRL_BPS_PANDA_DIR}/config/bps_ukdf.yaml  # To submit workflows to UKDF
-
-    pipelineYaml: "${DRP_PIPE_DIR}/pipelines/LSSTCam-imSim/DRP-test-med-1.yaml#isr"
-    # pipelineYaml: "${DRP_PIPE_DIR}/pipelines/LSSTCam-imSim/DRP-test-med-1.yaml#step1"
-
-    computeSite: SLAC
-    requestMemory: 4000
-    memoryMultiplier: 1.2
-
-    payload:
-      payloadName: test_DF_{computeSite}
-      inCollection: "2.2i/defaults"
-      # dataQuery: "instrument='LSSTCam-imSim' and skymap='DC2' and exposure in (214433) and detector=10"
-      dataQuery: "instrument='LSSTCam-imSim' and skymap='DC2' and exposure in (214433)"
-      # butlerConfig: panda-test-med-1        # butler configuration for FrDF and UKDF
-      butlerConfig: /repo/dc2                 # butler configuration for USDF
-
-    # setup private repo
-    setupLSSTEnv: >
-      source /cvmfs/sw.lsst.eu/linux-x86_64/lsst_distrib/{LSST_VERSION}/loadLSST.bash;
-      pwd; ls -al;
-      setup lsst_distrib;
-      setup -k -r /path/to/your/test/package;
