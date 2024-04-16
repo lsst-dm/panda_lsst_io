@@ -83,7 +83,7 @@ Ping the PanDA system to check whether the service is ok::
    $> bps ping
 
 **In this step, it will look for tokens for authorization. If you don't have a token or you are not registered yet,
-please check :ref:`User authentication`.**
+please check :ref:`user_authentication`.**
 
 Prepare YAML configuration
 --------------------------

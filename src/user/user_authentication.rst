@@ -1,4 +1,4 @@
-.. User authentication
+.. _user_authentication:
 
 User authentication
 ======================
@@ -101,6 +101,6 @@ Then the IAM can sign tokens for users in Rubin Dex.
 
 The IAM service needs to sign tokens for users from different labs or institutes. Does it mean
 that the IAM service needs to get approvals from all these labs or institutes? Here we use CILogon.
-CILogon is a service that many labs or institues have already approved for OIDC tokens. The PanDA
+CILogon is a service that many labs or institutes have already approved for OIDC tokens. The PanDA
 IAM just needs to get approvals from the CILogon. Then PanDA IAM will be able to sign tokens for
 users in these labs or institutes.
