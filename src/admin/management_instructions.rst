@@ -1,6 +1,17 @@
 Management instructions
 =======================
 
+Setup
+-----
+Setup environment to access the ``usdf-panda`` k8s cluster.
+
+- Get the tokens to authenticate usdf-panda cluster https://k8s.slac.stanford.edu/usdf-panda. Login to it to get instructions
+  to setup environment for ``usdf-panda``.
+
+- Follow the instructions to setup the environments in a USDF bash environment, such as SLAC ``rubin-dev``.
+
+General instructions
+--------------------
 Show services and pods::
 
     # kubectl get all -n panda
@@ -116,4 +127,15 @@ iDDS debug::
 
     # Check logs
     ll /var/log/idds/
+
+Other commands::
+
+    # iDDS
+    curl -sS -iv -k --request GET https://usdf-panda-idds.slac.stanford.edu:8443/idds/ping
+
+    # PanDA monitor
+    curl -sS -iv -k --request GET https://usdf-panda-bigmon.slac.stanford.edu:8443/idds/wfprogress
+
+    # openssl to verify the certificate
+    openssl s_client -verify_return_error -connect https://usdf-panda-bigmon.slac.stanford.edu:8443
 

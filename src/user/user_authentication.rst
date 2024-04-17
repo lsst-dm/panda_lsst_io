@@ -79,12 +79,37 @@ https://panda-iam-doma.cern.ch and after confirm the payload:
 
 Fig 2. Payload approve screen
 
+Detailed instructions for approving the URL:
+
+- Copy the URL from the command hints to a web browser (any web browser).
+  Then following the steps in the web browser. The URL is different at different
+  time. So everytime you need to copy the URL from the command hints.
+
+- After approving the URL in a web browser, you can come back to your
+  command terminal. Then type 'y' (and return) to let the command continue
+  to get the token.
+
 After approval, the PanDA client leaves a token in the user home folder
 and its used for future submissions unless the timeout has expired.
 
 **A valid token is required for all PanDA services. If there is no valid
 token, the *IAM user authentication* step will be triggered.**
 
+Check token status
+------------------
+
+You can check the token status with this command below: ::
+
+    [wguan@wguan-nb ~]$ panda_auth status
+    Filename:       /home/wguan/.token
+    Valid starting: 2024-04-15 17:13:48
+    Expires:        2024-04-22 17:13:48
+    Name:           Wen Guan
+    Email:          Wen.Guan@cern.ch
+    Groups:         Rubin,EIC,Rubin/production,panda_dev
+    Organization:   PanDA-DOMA
+
+**For different users, the output can be different, for example different groups**.
 
 Authorization between IAM and the labs
 --------------------------------------

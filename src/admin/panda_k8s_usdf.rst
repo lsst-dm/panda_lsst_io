@@ -21,9 +21,10 @@ Setup
 -----
 Setup environment to access the ``usdf-panda`` k8s cluster.
 
-- Get the tokens to authenticate usdf-panda cluster https://k8s.slac.stanford.edu/usdf-panda. Login to it to get tokens
+- Get the tokens to authenticate usdf-panda cluster https://k8s.slac.stanford.edu/usdf-panda. Login to it to get instructions
+  to setup environment for ``usdf-panda``.
 
-- Follow the instructions to setup the environments in a USDF bash environment, such as ``rubin-dev``.
+- Follow the instructions to setup the environments in a USDF bash environment, such as SLAC ``rubin-dev``.
 
 Deploy secrets
 --------------
