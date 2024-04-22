@@ -23,11 +23,11 @@ We need to add rules in the PanDA database to boost memory.
 
 .. image:: ../_images/panda_errors.png
  :width: 7.30895in
- :height: 2.46667in
+ :height: 1.46667in
 
 .. image:: ../_images/panda_error_cat.png
  :width: 7.30895in
- :height: 2.46667in
+ :height: 1.46667in
 
 - Add rules to boost memory.
   For Rubin, we found that **exeErrorCode:137** and **pilotErrorCode:1212** are caused by run out of memory.
