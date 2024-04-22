@@ -73,7 +73,7 @@ Login to pods::
 
 Pod logs::
 
-    Normally the pod logs are under /var/log/panda, /var/log/idds.
+    After logging into a pod, normally the pod logs can be found under /var/log/panda, /var/log/idds.
     To understand what the pod is running, you can ‘ps -ef’ or ‘ps -ef|grep sh’ to list all processes. The first process will tell you what the pod is doing.
 
 Harvester debug::
@@ -81,11 +81,18 @@ Harvester debug::
     kubectl exec -n panda -it harvester-dev-0 -- bash
     # Check condor
     source  /data/condor/condor/condor.sh
-    Condor_q
+    condor_q
+
     # Check harvester logs, for example:
-    grep 'workers status' /var/log/panda/panda-submitter.log
-    # Start httpd if it’s not running: harvester httpd is used to export harvester logs
+    grep 'workers status' /var/log/panda/panda-submitter.loga
+
+    # check whether httpd is not running (http is used for exporting harvester jobs' logs)
+    ps -ef|grep http|grep -v grep
+    # if no http processes, start it with this command
     runuser -u atlpan -g zp -- /sbin/httpd
+
+    # check whether harvester service is running
+    ps -ef|grep uwsgi|grep -v grep
     # stop/start harvester services
     runuser -u atlpan -g zp -- /opt/harvester/etc/rc.d/init.d/panda_harvester-uwsgi stop
     runuser -u atlpan -g zp -- /opt/harvester/etc/rc.d/init.d/panda_harvester-uwsgi start

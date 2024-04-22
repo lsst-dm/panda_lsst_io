@@ -66,6 +66,10 @@ associated configuration parameters should be defined in the YAML::
 
     requestMemory: 4096
 
+    fileDistributionEndPoint: s3://butler-us-central1-panda-dev/hsc/{payload_folder}/{uniqProcName}/
+    s3_endpoint_url: https://storage.googleapis.com
+
+
     ...
 
 The first parameter (computing_cloud) defines the PanDA cloud associated

@@ -101,30 +101,18 @@ Later in this section we focus on PanDA specific and minimal set of the
 common settings supplied in the YAML with *bps submit <config>.yaml*
 command. They are::
 
-   -  maxwalltime: 90000 maximum wall time on the execution node allowed to
+   -  request_walltime: 90000 maximum wall time on the execution node allowed to
       run a single job in seconds
 
-   -  maxattempt: 1 number of attempts to successfully execute a job. It is
-      recommended to set this parameter at least to 5 due to preemptions
-      of machines used in the GKE cluster
+   -  number_of_retries: number of attempts to successfully execute a job. Defult 5
 
    -  whenSaveJobQgraph: "NEVER" this parameter is mandatory because PanDA
       plugin is currently supports only a single quantum graph file
       distribution model
 
-   -  idds_server: "https://aipanda015.cern.ch:443/idds" this is the URL of
-      the iDDS server used for the workflow orchestration
-
-   -  sw_image: "spodolsky/centos:7-stack-lsst_distrib-d_2021_08_11"
-      defines the Docker image with the SW distribution to use on the
-      computation nodes
-
    -  fileDistributionEndPoint:
-      "s3://butler-us-central1-panda-dev/hsc/{payload_folder}/{uniqProcName}/"
-      this is bucket name and path to the data used in the workflow
-
-   -  s3_endpoint_url: "https://storage.googleapis.com" the address of the
-      object storage server
+      "file://${LSST_RUN_TEMP_SPACE}/{operator}/panda_cache_box/{payloadFolder}/{uniqProcName}/"
+      for USDF, UKDF and FrDF by default.
 
    -  payload_folder: payload name of the folder where the quantum graph
       file will be stored
