@@ -41,6 +41,9 @@ We need to add rules in the PanDA database to boost memory.
 
 - To monitor the logs in panda server (not jedi)::
 
+      # how to find which machine to check
+      # (1) go to the panda monitor page, for example https://usdf-panda-bigmon.slac.stanford.edu:8443/job?pandaid=18214833
+      # (2) click 'Show' -> 'Job Status log', you will find which machine that updates the job status
       kubectl exec -it -n panda panda-server-0 -- bash    # or other panda servers
       ls /var/log/panda/panda-RetrialModule.log
 
