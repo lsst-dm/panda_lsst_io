@@ -37,7 +37,29 @@ We need to add rules in the PanDA database to boost memory.
     insert into retryerrors(retryerror_id, errorsource, errorcode, errordiag, active, retryaction, description) values(1, 'taskBufferErrorCode', 300, '.*The worker was finished while the job was starting.*', 'Y', 1, 'increase memory');
     insert into retryerrors(retryerror_id, errorsource, errorcode, active, retryaction, description) values(1, 'exeErrorCode', 137, 'Y', 1, 'increase memory');
     insert into retryerrors(retryerror_id, errorsource, errorcode, active, retryaction, description) values(2, 'pilotErrorCode', 1212, 'Y', 1, 'increase memory');
+    insert into retryerrors(retryerror_id, errorsource, errorcode, active, retryaction, description) values(3, 'transexitcode', 137, 'Y', 1, 'increase memory');
 
 - To monitor the logs in panda server (not jedi)::
 
+      kubectl exec -it -n panda panda-server-0 -- bash    # or other panda servers
       ls /var/log/panda/panda-RetrialModule.log
+
+      # check the database
+      psql -h usdf-panda-server-rw.panda-db.svc.cluster.local -p 5432 -W -U rubin panda
+      # password can be found in with 'env|grep PANDA_DB_PASSWORD'
+
+      # check example jobs
+      select pandaid, transexitcode, piloterrorcode, piloterrordiag, exeerrorcode, exeerrordiag from jobsarchived4 where pandaid=18106113;
+      pandaid  | transexitcode | piloterrorcode |                                                piloterrordiag                                                 | exeerrorcode | exeerrordiag
+      ----------+---------------+----------------+---------------------------------------------------------------------------------------------------------------+--------------+--------------
+      18106113 | 137           |           1305 | Failed to execute payload:attempt to reduce the monitored value of monotonic rchar from 1546273273 to 1706939 |            0 |
+
+      # check retry errors
+      select * from retryerrors;
+      retryerror_id |  errorsource   | errorcode | active | retryaction | errordiag | parameters | architecture | release | workqueue_id |   description   | expiration_date
+      ---------------+----------------+-----------+--------+-------------+-----------+------------+--------------+---------+--------------+-----------------+-----------------
+      1 | exeErrorCode   |       137 | Y      |           1 |           |            |              |         |              | increase memory |
+      2 | pilotErrorCode |      1212 | Y      |           1 |           |            |              |         |              | increase memory |
+
+      # transexitcode: 137 is not marked as retry, to add it
+      insert into retryerrors(retryerror_id, errorsource, errorcode, active, retryaction, description) values(3, 'transexitcode', 137, 'Y', 1, 'increase memory');

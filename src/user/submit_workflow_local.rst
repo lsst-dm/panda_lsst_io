@@ -75,10 +75,10 @@ Later in this section we focus on PanDA specific and minimal set of the
 common settings supplied in the YAML with *bps submit <config>.yaml*
 command. They are::
 
-   -  maxwalltime: 90000 maximum wall time on the execution node allowed to
+   -  requestWalltime: 90000 maximum wall time on the execution node allowed to
       run a single job in seconds
 
-   -  maxattempt: 1 number of attempts to successfully execute a job. It is
+   -  NumberOfRetries: 1 number of attempts to successfully execute a job. It is
       recommended to set this parameter at least to 5 due to preemptions
       of machines used in the GKE cluster
 

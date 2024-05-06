@@ -101,10 +101,10 @@ Later in this section we focus on PanDA specific and minimal set of the
 common settings supplied in the YAML with *bps submit <config>.yaml*
 command. They are::
 
-   -  request_walltime: 90000 maximum wall time on the execution node allowed to
+   -  requestWalltime: 90000 maximum wall time on the execution node allowed to
       run a single job in seconds
 
-   -  number_of_retries: number of attempts to successfully execute a job. Defult 5
+   -  numberOfRetries: number of attempts to successfully execute a job. Defult 5
 
    -  whenSaveJobQgraph: "NEVER" this parameter is mandatory because PanDA
       plugin is currently supports only a single quantum graph file
