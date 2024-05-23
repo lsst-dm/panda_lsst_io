@@ -158,6 +158,26 @@ Site&Memory requirements in YAML files
                requestMemory: 4000
                queue: "SLAC_Rubin_Merge"
 
+  * Another example to get multiple CPU Cores. Currently only the queue *<site>_Rubin_Extra_Himem* supports multi-cores.
+    If the job needs multi-cores, the queue must be specified and *requestCpus* is needed. With multi-cores,
+    the *requestMemory* is the total memory of all CPU cores::
+
+       computeCloud: "US"
+       computeSite: "SLAC"
+       requestMemory: 2048
+
+       pipetask:
+           pipetaskInit:
+               requestCpus: 2
+               queue: "SLAC_Rubin_Extra_Himem"
+               requestMemory: 8000
+
+           forcedPhotCoadd:
+               # *requestMemory is still required here.*
+               # *Otherwise it can be schedule to the merge*
+               # *queue, but the requestMemory is still 2048*
+               requestMemory: 4000
+               queue: "SLAC_Rubin_Merge"
 
 Example YAML configuration for local submission
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

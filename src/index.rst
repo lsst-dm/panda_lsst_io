@@ -28,6 +28,7 @@ Here are documents for users to submit jobs to PanDA system
    user/submit_workflow
    user/submit_workflow_local
    user/workflow_monitor_debug
+   user/run_prun
    user/archives
 
 Administrator guide
