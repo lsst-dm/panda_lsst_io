@@ -1,7 +1,10 @@
 .. _run_prun:
 
+How to use prun to submit jobs to remote sites
+==============================================
+
 What is prun
-============
+------------
 
 prun is a PanDA client CLI, which can be used to send user scripts to be executed at remote sites.
 
