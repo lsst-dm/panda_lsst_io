@@ -155,6 +155,23 @@ Site&Memory requirements in YAML files
        executionButler:
            requestMemory: 4000
 
+  * *Clustering* memory requirements: Here is an example to put 4 jobs of pipetasks into
+    a *diffim* cluster. In the example, *memoryMultiplier* is used to boost memory when a job
+    failed because of running out of memory::
+
+       computeCloud: "US"
+       computeSite: "SLAC"
+       requestMemory: 2048
+
+       cluster:
+           diffim:
+               requestMemory: 8000
+               memoryMultiplier: 1.5
+               numberOfRetries: 3
+
+       executionButler:
+           requestMemory: 4000
+
   * Another example by specifying queues (Here a *queue* is defined)::
 
        computeCloud: "US"
