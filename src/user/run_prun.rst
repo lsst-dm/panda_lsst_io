@@ -110,7 +110,7 @@ How to submit jobs to remote sites::
 Monitor jobs
 ~~~~~~~~~~~~~
 
-The prun command submits tasks to PanDA systme. They are not workflows.
+The prun command submits tasks to PanDA systmem. They are not workflows.
 These tasks can only be found from the task view::
 
     https://usdf-panda-bigmon.slac.stanford.edu:8443/tasks/?display_limit=300
