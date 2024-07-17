@@ -95,6 +95,13 @@ Here are the content of LSST_LOCAL_PROLOG and corresponding descriptions.
 
     export LSST_DB_AUTH=/sdf/home/l/lsstsvc1/.lsst/db-auth.yaml
 
+  The content of it is something like: ::
+
+    $> cat ~/.lsst/db-auth.yaml
+    - url: postgresql://usdf-butler.slac.stanford.edu:5432/lsstdb1
+    username: rubin
+    password: *********************************************************
+
 - LSST_RUN_TEMP_SPACE:
 
   A temporary directory to store qgraph files, the execution butler and a few other scripts.
