@@ -138,4 +138,4 @@ one example.
 
 .. image:: ../_images/event_service_monitor.png
    :width: 6.5in
-   :height: 2.66667in
+   :height: 6.66667in
