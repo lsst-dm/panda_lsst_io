@@ -1,25 +1,26 @@
 Pilot Environment on CVMFS
 ==========================
 
-To make sure pilot can run with all required environments, we maintained a pilot environment to
-deploy necessary packages to cvmfs.
+To make sure that the pilot can run in various environments across sites, we maintain the pilot
+environment by deploying necessary packages to cvmfs.
 
 Contents in Pilot Environment
 -----------------------------
 
-Here are the main contents in pilot environment:
+Here are the main contents in a pilot environment:
 
-- Conda environment with necessary packages.
+- Conda environment with necessary dependencypackages.
 
 - Pilot wrapper.
 
-- Pilot.
+- Pilot (Pilot can be located on a http server, github, cvmfs and somewhere else. With the same Conda
+  environment, different pilots can be used).
 
 - Pilot configuration file and Rucio configuration file (for Rucio integration).
 
-- [optional] BPS deployment
+- [optional] BPS deployment (For special BPS versions or patches).
 
-- Setup files for users to setup PanDA environment. Users can run the setup files to setup LSST
+- Setup files for users to setup PanDA environment. Users can source the files to setup LSST
   stack and PanDA environment, in order to submit jobs to PanDA.
 
 How to manage it
