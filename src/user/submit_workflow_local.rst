@@ -33,7 +33,7 @@ Setup environment with CVMFS
 The submit workflows from USDF, FrDF and UKDF, the CVMFS is available. Users can use
 CVMFS to setup the environments::
 
-  latest=$(ls -td /cvmfs/sw.lsst.eu/linux-x86_64/panda_env/v* | head -1)
+  latest=$(ls -td /cvmfs/sw.lsst.eu/almalinux-x86_64/panda_env/v* | head -1)
   source $latest/setup_lsst.sh <lsst stack version>
   # source $latest/setup_lsst.sh w_2024_14   # for example
   source $latest/setup_panda.sh
@@ -262,7 +262,7 @@ Developers may have private lsst stack environment. Here are instructions for de
 
 Copy the stack environment setup script from cvmfs to your local directory and update the lsst setup part to your private repo: ::
 
-   $> latest=$(ls -td /cvmfs/sw.lsst.eu/linux-x86_64/panda_env/v* | head -1)
+   $> latest=$(ls -td /cvmfs/sw.lsst.eu/almalinux-x86_64/panda_env/v* | head -1)
    $> cp $latest/setup_lsst.sh /local/directory/
    $> <update /local/directory/setup_lsst.sh>
    $> source /local/directory/setup_lsst.sh
@@ -298,7 +298,7 @@ Here is an example for local submission for developer, with customizing ``setupL
 
     # setup private repo
     setupLSSTEnv: >
-      source /cvmfs/sw.lsst.eu/linux-x86_64/lsst_distrib/{LSST_VERSION}/loadLSST.bash;
+      source /cvmfs/sw.lsst.eu/almalinux-x86_64/lsst_distrib/{LSST_VERSION}/loadLSST.bash;
       pwd; ls -al;
       setup lsst_distrib;
       setup -k -r /path/to/your/test/package;

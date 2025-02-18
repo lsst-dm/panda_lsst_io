@@ -29,7 +29,7 @@ Setup environment with CVMFS
 The submit workflows from USDF, FrDF and UKDF, the CVMFS is available. Users can use
 CVMFS to setup the environments::
 
-  latest=$(ls -td /cvmfs/sw.lsst.eu/linux-x86_64/panda_env/v* | head -1)
+  latest=$(ls -td /cvmfs/sw.lsst.eu/almalinux-x86_64/panda_env/v* | head -1)
   source $latest/setup_lsst.sh <lsst stack version>
   # source $latest/setup_lsst.sh w_2024_14   # for example
   source $latest/setup_panda.sh
@@ -87,7 +87,7 @@ Here is a simple example::
   >>cat my_test_command.sh
   #!/bin/bash
 
-  latest=$(ls -td /cvmfs/sw.lsst.eu/linux-x86_64/panda_env/v* | head -1)
+  latest=$(ls -td /cvmfs/sw.lsst.eu/almalinux-x86_64/panda_env/v* | head -1)
 
   source $latest/setup_lsst.sh w_2024_14
 
