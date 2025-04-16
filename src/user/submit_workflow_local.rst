@@ -89,7 +89,7 @@ command. They are::
    -  idds_server: "https://aipanda015.cern.ch:443/idds" this is the URL of
       the iDDS server used for the workflow orchestration
 
-   -  sw_image: "spodolsky/centos:7-stack-lsst_distrib-d_2021_08_11"
+   -  sw_image: "ghcr.io/lsst/scipipe:d_latest"
       defines the Docker image with the SW distribution to use on the
       computation nodes
 
