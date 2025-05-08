@@ -146,3 +146,23 @@ Other commands::
     # openssl to verify the certificate
     openssl s_client -verify_return_error -connect https://usdf-panda-bigmon.slac.stanford.edu:8443
 
+Slurm Harvester
+---------------
+The slurm harvester at sdfharvester002::
+
+    ssh lsstsvc1@sdfharvester002
+
+    # harvester directory for USDF PanDA on SLAC K8s
+    cd /sdf/home/l/lsstsvc1/harvester/k8s/
+
+    # set queue online/offline
+    vi etc/panda/panda_queueconfig.json
+
+    # update maxWorkers to limit the number of workers
+    # nCoreFactor is the number of pilots per worker
+    # max number of pilots = maxWorkers * nCoreFactor
+    vi etc/panda/panda_queueconfig.json
+
+    # stop/start harvester
+    bash start_stop.sh stop
+    bash start_stop.sh start
