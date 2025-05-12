@@ -130,6 +130,9 @@ and uptimes and as such should not be used for regular runs
      - 1
 
 
+Note: In the table above, maxRSS 4G means 4000 and minRSS 4G means 4001. So that the current panda queue
+and the previous panda queue don't have overlaps.
+
 For **<site>_Rubin_Merge**, the default number of cores is 1. If the user specifies more than 1 cores,
 it will user the number of cores defined by users.
 
